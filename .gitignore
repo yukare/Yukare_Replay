@@ -1,0 +1,5 @@
+# Ren'Py compiled files (can be regenerated from .rpy)
+*.rpyc
+*.rpymc
+*.rpyb
+
