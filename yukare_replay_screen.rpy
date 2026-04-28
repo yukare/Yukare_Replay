@@ -62,6 +62,7 @@ screen Yukare_Replay_Character_Select():
                         style "yukare_gallery_char_button"
                         xalign 0.5
 
+    textbutton "Random Mode" action ui.callsinnewcontext("yukare_random_start") align (0.05, 0.95) style "yukare_gallery_button"
     textbutton "Return" action Return() align (0.95, 0.95) style "yukare_gallery_button"
 
 screen Yukare_Replay_Scene_Select(char_name):
