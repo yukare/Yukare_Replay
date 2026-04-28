@@ -3,12 +3,13 @@ init -10 python:
     import os
 
     class YukareScene(object):
-        def __init__(self, label, character, title, tags, image=None):
+        def __init__(self, label, character, title, tags, image=None, scene_image=None):
             self.label = label
             self.character = character
             self.title = title
             self.tags = tags
             self.image = image
+            self.scene_image = scene_image
             self.thumbnail = "Yukare_Replay/images/img.webp" # Default thumbnail
 
     yukare_scenes = {}
@@ -43,13 +44,15 @@ init -10 python:
             title = re.search(r"##@title\s+(.*)", label_content)
             tags = re.search(r"##@tags\s+(.*)", label_content)
             image = re.search(r"##@image\s+(.*)", label_content)
+            scene_img = re.search(r"##@scene_image\s+(.*)", label_content)
             char_img = re.search(r"##@char_image\s+(.*)", label_content)
 
             char_raw = character.group(2).strip()
             char_names = [c.strip() for c in char_raw.split(",")]
             scene_title = title.group(1).strip() if title else label_name.replace("replay_", "").replace("_", " ").title()
             scene_tags = tags.group(1).strip() if tags else ""
-            scene_image = image.group(1).strip() if image else None
+            scene_image_path = image.group(1).strip() if image else None
+            specific_scene_image = scene_img.group(1).strip() if scene_img else None
 
             for char_name in char_names:
                 if char_img:
@@ -59,7 +62,7 @@ init -10 python:
                     yukare_scenes[char_name] = []
                     yukare_characters.append(char_name)
 
-                yukare_scenes[char_name].append(YukareScene(label_name, char_name, scene_title, scene_tags, scene_image))
+                yukare_scenes[char_name].append(YukareScene(label_name, char_name, scene_title, scene_tags, scene_image_path, specific_scene_image))
 
     parse_yukare_scenes()
     yukare_characters.sort()

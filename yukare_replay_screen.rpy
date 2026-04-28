@@ -1,3 +1,9 @@
+image yukare_gallery_bg:
+    # Cria um fundo escuro elegante com uma leve transparência
+    # Se quiser usar uma imagem de fundo, troque Solid por "caminho/da/imagem.jpg"
+    Solid("#121216")
+    alpha 0.95
+
 ###############################################################################
 ##
 ## Yukare Replay Gallery Screens
@@ -29,7 +35,7 @@ style yukare_gallery_label:
 
 screen Yukare_Replay_Character_Select():
     tag menu
-    add "Yukare_Replay/images/GalleryBG.jpg"
+    add "yukare_gallery_bg"
 
     vbox:
         align (0.5, 0.1)
@@ -67,7 +73,7 @@ screen Yukare_Replay_Character_Select():
 
 screen Yukare_Replay_Scene_Select(char_name):
     tag menu
-    add "Yukare_Replay/images/GalleryBG.jpg"
+    add "yukare_gallery_bg"
 
     vbox:
         align (0.5, 0.05)
@@ -89,7 +95,7 @@ screen Yukare_Replay_Scene_Select(char_name):
             xfill True
 
             for s in current_scenes:
-                $ display_thumb = s.image if s.image else s.thumbnail
+                $ display_thumb = s.scene_image if s.scene_image else (s.image if s.image else s.thumbnail)
                 vbox:
                     spacing 15
                     xsize 400
