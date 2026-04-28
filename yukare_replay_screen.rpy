@@ -8,24 +8,24 @@ style yukare_gallery_button:
     color "#FFF"
     hover_color "#0f0"
     size 30
-    font "fonts/TerminalDosis-Medium.ttf"
+    
 
 style yukare_gallery_char_button:
     color "#FFF"
     hover_color "#0f0"
     size 80
-    font "fonts/TerminalDosis-Medium.ttf"
+    
 
 style yukare_gallery_title:
     color "#FF86C2"
     size 40
-    font "fonts/TerminalDosis-Medium.ttf"
+    
     outlines [(2, "#000", 0, 0)]
 
 style yukare_gallery_label:
     color "#FFF"
     size 22
-    font "fonts/TerminalDosis-Medium.ttf"
+    
     outlines [(1, "#000", 0, 0)]
 
 screen Yukare_Replay_Character_Select():
