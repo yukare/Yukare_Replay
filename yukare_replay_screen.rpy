@@ -113,10 +113,13 @@ screen Yukare_Replay_Scene_Select(char_name):
                         hover Transform(display_thumb, zoom=0.19)
                         action Replay(s.label, locked=False)
                         align (0.5, 0.5)
-                    text "[s.title]":
-                        style "yukare_gallery_label"
-                        xalign 0.5
-                        text_align 0.5
+                    
+                    if s.title:
+                        text "[s.title]":
+                            style "yukare_gallery_label"
+                            xalign 0.5
+                            text_align 0.5
+                    
                     if s.tags:
                         text "([s.tags])":
                             style "yukare_gallery_label"

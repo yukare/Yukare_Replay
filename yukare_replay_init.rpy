@@ -49,7 +49,7 @@ init -10 python:
 
             char_raw = character.group(2).strip()
             char_names = [c.strip() for c in char_raw.split(",")]
-            scene_title = title.group(1).strip() if title else label_name.replace("replay_", "").replace("_", " ").title()
+            scene_title = title.group(1).strip() if title else ""
             scene_tags = tags.group(1).strip() if tags else ""
             scene_image_path = image.group(1).strip() if image else None
             specific_scene_image = scene_img.group(1).strip() if scene_img else None
