@@ -15,6 +15,15 @@ style yukare_gallery_button:
     hover_color "#0f0"
     size 30
 
+style yukare_gallery_return_button is yukare_gallery_button:
+    # Estilo próprio para o botão de retornar
+    xalign 0.95
+    yalign 0.95
+
+style yukare_gallery_random_button is yukare_gallery_button:
+    # Estilo próprio para o botão de galeria aleatória
+    xalign 0.05
+    yalign 0.95
 
 style yukare_gallery_char_button:
     color "#FFF"
@@ -68,8 +77,8 @@ screen Yukare_Replay_Character_Select():
                         style "yukare_gallery_char_button"
                         xalign 0.5
 
-    textbutton "Random Mode" action ui.callsinnewcontext("yukare_random_start") align (0.05, 0.95) style "yukare_gallery_button"
-    textbutton "Return" action Return() align (0.95, 0.95) style "yukare_gallery_button"
+    textbutton "Random Mode" action ui.callsinnewcontext("yukare_random_start") style "yukare_gallery_random_button"
+    textbutton "Return" action Return() style "yukare_gallery_return_button"
 
 screen Yukare_Replay_Scene_Select(char_name):
     tag menu
@@ -115,4 +124,4 @@ screen Yukare_Replay_Scene_Select(char_name):
                             xalign 0.5
                             text_align 0.5
 
-    textbutton "Return" action ShowMenu("Yukare_Replay_Character_Select") align (0.95, 0.95) style "yukare_gallery_button"
+    textbutton "Return" action ShowMenu("Yukare_Replay_Character_Select") style "yukare_gallery_return_button"
