@@ -25,6 +25,13 @@ style yukare_gallery_random_button is yukare_gallery_button:
     xalign 0.05
     yalign 0.95
 
+style yukare_replay_end_button is yukare_gallery_button:
+    # Estilo para o botão de encerrar replay (Canto superior direito)
+    xalign 0.99
+    yalign 0.01
+    background Solid("#00000066") # Fundo semi-transparente opcional
+    padding (10, 5)
+
 style yukare_gallery_char_button:
     color "#FFF"
     hover_color "#0f0"
@@ -41,6 +48,12 @@ style yukare_gallery_label:
     color "#FFF"
     size 22
     outlines [(1, "#000", 0, 0)]
+
+# Tela que exibe o botão apenas durante um replay
+screen yukare_replay_controls():
+    zorder 100
+    if _in_replay:
+        textbutton "End Replay" action EndReplay(confirm=True) style "yukare_replay_end_button"
 
 screen Yukare_Replay_Character_Select():
     tag menu

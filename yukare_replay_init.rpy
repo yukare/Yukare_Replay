@@ -15,8 +15,10 @@ init -10 python:
     yukare_scenes = {}
     yukare_characters = []
     # Dicionário para imagens dos personagens
-    # Você pode definir manualmente aqui: yukare_character_images["Summer"] = "caminho/da/imagem.png"
     yukare_character_images = {}
+
+    # Adiciona a tela de controles de replay aos overlays do sistema
+    config.overlay_screens.append("yukare_replay_controls")
 
     def parse_yukare_scenes():
         global yukare_scenes, yukare_characters, yukare_character_images
