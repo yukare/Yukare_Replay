@@ -61,7 +61,7 @@ screen Yukare_Replay_Character_Select():
 
     vbox:
         align (0.5, 0.1)
-        text "Yukare Replay Gallery" style "yukare_gallery_title"
+        text "Scene Replay Gallery" style "yukare_gallery_title"
 
     viewport:
         align (0.5, 0.5)
@@ -126,13 +126,13 @@ screen Yukare_Replay_Scene_Select(char_name):
                         hover Transform(display_thumb, zoom=0.19)
                         action Replay(s.label, locked=False)
                         align (0.5, 0.5)
-                    
+
                     if s.title:
                         text "[s.title]":
                             style "yukare_gallery_label"
                             xalign 0.5
                             text_align 0.5
-                    
+
                     if s.tags:
                         text "([s.tags])":
                             style "yukare_gallery_label"
