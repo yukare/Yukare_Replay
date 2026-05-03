@@ -58,6 +58,9 @@ screen yukare_replay_controls():
 screen Yukare_Replay_Character_Select():
     tag menu
     add "yukare_gallery_bg"
+    
+    # Variável para rastrear qual personagem está sob o mouse
+    default hovered_char = None
 
     vbox:
         align (0.5, 0.1)
@@ -66,29 +69,65 @@ screen Yukare_Replay_Character_Select():
     viewport:
         align (0.5, 0.5)
         xsize 1300
-        ysize 750
+        ysize 700
         scrollbars "vertical"
         mousewheel True
         draggable True
 
         vpgrid:
             cols 3
-            spacing 80
+            spacing 60
             xfill True
 
             for c in yukare_characters:
                 $ char_thumb = yukare_character_images.get(c, "Yukare_Replay/images/img.webp")
                 vbox:
-                    spacing 20
+                    spacing 10
                     imagebutton:
                         idle Transform(char_thumb, zoom=0.2)
                         hover Transform(char_thumb, zoom=0.21)
                         action ShowMenu("Yukare_Replay_Scene_Select", char_name=c)
+                        hovered SetScreenVariable("hovered_char", c)
+                        unhovered SetScreenVariable("hovered_char", None)
                         align (0.5, 0.5)
-                    textbutton c:
-                        action ShowMenu("Yukare_Replay_Scene_Select", char_name=c)
-                        style "yukare_gallery_char_button"
+
+                    vbox:
+                        spacing 0 # Minimum spacing
                         xalign 0.5
+                        textbutton c:
+                            action ShowMenu("Yukare_Replay_Scene_Select", char_name=c)
+                            style "yukare_gallery_char_button"
+                            xalign 0.5
+                            hovered SetScreenVariable("hovered_char", c)
+                            unhovered SetScreenVariable("hovered_char", None)
+
+                        $ char_desc = yukare_character_descriptions.get(c, "")
+                        if char_desc:
+                            text "[char_desc]":
+                                style "yukare_gallery_label"
+                                size 18
+                                xalign 0.5
+                                text_align 0.5
+                                xsize 380
+                                ysize 100
+                                layout "subtitle"
+
+    # Painel de descrição completa (aparece ao passar o mouse)
+    if hovered_char:
+        $ full_desc = yukare_character_descriptions.get(hovered_char, "")
+        if full_desc:
+            frame:
+                align (0.5, 0.98)
+                xsize 1300
+                padding (20, 20)
+                background Solid("#000000DD")
+                
+                text "[hovered_char]: [full_desc]":
+                    style "yukare_gallery_label"
+                    size 24
+                    xalign 0.5
+                    text_align 0.5
+                    layout "subtitle"
 
     textbutton "Random Mode" action ui.callsinnewcontext("yukare_random_start") style "yukare_gallery_random_button"
     textbutton "Return" action Return() style "yukare_gallery_return_button"

@@ -16,12 +16,14 @@ init -10 python:
     yukare_characters = []
     # Dicionário para imagens dos personagens
     yukare_character_images = {}
+    # Dicionário para descrições dos personagens
+    yukare_character_descriptions = {}
 
     # Adiciona a tela de controles de replay aos overlays do sistema
     config.overlay_screens.append("yukare_replay_controls")
 
     def parse_yukare_scenes():
-        global yukare_scenes, yukare_characters, yukare_character_images
+        global yukare_scenes, yukare_characters, yukare_character_images, yukare_character_descriptions
 
         scenes_file = os.path.join(config.gamedir, "Yukare_Replay/scenes.rpy")
         if not os.path.exists(scenes_file):
@@ -38,16 +40,17 @@ init -10 python:
             label_content = labels[i+1]
 
             # Extract metadata
-            character = re.search(r"##@(person|girl)\s+(.*)", label_content)
+            character = re.search(r"##@(person|girl)\s+(.*)", label_content, re.IGNORECASE)
 
             if not character:
                 continue
 
-            title = re.search(r"##@title\s+(.*)", label_content)
-            tags = re.search(r"##@tags\s+(.*)", label_content)
-            image = re.search(r"##@image\s+(.*)", label_content)
-            scene_img = re.search(r"##@scene_image\s+(.*)", label_content)
-            char_img = re.search(r"##@char_image\s+(.*)", label_content)
+            title = re.search(r"##@title\s+(.*)", label_content, re.IGNORECASE)
+            tags = re.search(r"##@tags\s+(.*)", label_content, re.IGNORECASE)
+            image = re.search(r"##@image\s+(.*)", label_content, re.IGNORECASE)
+            scene_img = re.search(r"##@scene_image\s+(.*)", label_content, re.IGNORECASE)
+            char_img = re.search(r"##@char_image\s+(.*)", label_content, re.IGNORECASE)
+            char_desc = re.search(r"##@char_description\s+(.*)", label_content, re.IGNORECASE)
 
             char_raw = character.group(2).strip()
             char_names = [c.strip() for c in char_raw.split(",")]
@@ -57,8 +60,12 @@ init -10 python:
             specific_scene_image = scene_img.group(1).strip() if scene_img else None
 
             for char_name in char_names:
+                char_name = char_name.strip()
                 if char_img:
                     yukare_character_images[char_name] = char_img.group(1).strip()
+
+                if char_desc:
+                    yukare_character_descriptions[char_name] = char_desc.group(1).strip()
 
                 if char_name not in yukare_scenes:
                     yukare_scenes[char_name] = []
