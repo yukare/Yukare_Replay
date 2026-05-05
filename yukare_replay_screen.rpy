@@ -58,6 +58,7 @@ screen yukare_replay_controls():
 screen Yukare_Replay_Character_Select():
     tag menu
     add "yukare_gallery_bg"
+    on "show" action SetVariable("yukare_selected_tags", [])
 
     vbox:
         align (0.5, 0.1)
@@ -101,12 +102,38 @@ screen Yukare_Replay_Scene_Select(char_name):
         align (0.5, 0.05)
         text "[char_name] Scenes" style "yukare_gallery_title"
 
+    # Filter selection
+    hbox:
+        align (0.5, 0.15)
+        spacing 30
+        text "Filter:" style "yukare_gallery_label" size 24 yalign 0.5
+        
+        viewport:
+            xsize 1000
+            ysize 60
+            mousewheel True
+            draggable True
+            yalign 0.5
+            hbox:
+                spacing 20
+                yalign 0.5
+                textbutton "All" action SetVariable("yukare_selected_tags", []) style "yukare_gallery_button" text_size 20 yalign 0.5:
+                    if not yukare_selected_tags:
+                        text_color "#0f0"
+                
+                for t in yukare_all_tags:
+                    textbutton t action ToggleSetMembership(yukare_selected_tags, t) style "yukare_gallery_button" text_size 20 yalign 0.5:
+                        if t in yukare_selected_tags:
+                            text_color "#0f0"
+
     $ current_scenes = yukare_scenes.get(char_name, [])
+    if yukare_selected_tags:
+        $ current_scenes = [s for s in current_scenes if all(tag in s.tag_list for tag in yukare_selected_tags)]
 
     viewport:
-        align (0.5, 0.5)
+        align (0.5, 0.6)
         xsize 1500
-        ysize 800
+        ysize 700
         scrollbars "vertical"
         mousewheel True
         draggable True

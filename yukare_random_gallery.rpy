@@ -12,11 +12,13 @@ init python:
     def get_next_random_yukare_scene():
         """Selects the next random scene label and returns it."""
         all_scenes_dict = getattr(store, 'yukare_scenes', {})
+        selected_tags = getattr(store, 'yukare_selected_tags', [])
         
         all_labels = []
         for char_scenes in all_scenes_dict.values():
             for s in char_scenes:
-                all_labels.append(s.label)
+                if not selected_tags or all(tag in s.tag_list for tag in selected_tags):
+                    all_labels.append(s.label)
         
         if not all_labels:
             return None

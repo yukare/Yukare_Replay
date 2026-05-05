@@ -8,12 +8,14 @@ init -10 python:
             self.character = character
             self.title = title
             self.tags = tags
+            self.tag_list = [t.strip() for t in tags.split(",")] if tags else []
             self.image = image
             self.scene_image = scene_image
             self.thumbnail = "Yukare_Replay/images/img.webp" # Default thumbnail
 
     yukare_scenes = {}
     yukare_characters = []
+    yukare_all_tags = set()
     # Dicionário para imagens dos personagens
     yukare_character_images = {}
 
@@ -21,7 +23,12 @@ init -10 python:
     config.overlay_screens.append("yukare_replay_controls")
 
     def parse_yukare_scenes():
-        global yukare_scenes, yukare_characters, yukare_character_images
+        global yukare_scenes, yukare_characters, yukare_character_images, yukare_all_tags
+
+        yukare_scenes = {}
+        yukare_characters = []
+        yukare_all_tags = set()
+        yukare_character_images = {}
 
         scenes_file = os.path.join(config.gamedir, "Yukare_Replay/scenes.rpy")
         if not os.path.exists(scenes_file):
@@ -56,6 +63,12 @@ init -10 python:
             scene_image_path = image.group(1).strip() if image else None
             specific_scene_image = scene_img.group(1).strip() if scene_img else None
 
+            # Add to all tags
+            if scene_tags:
+                for t in [t.strip() for t in scene_tags.split(",")]:
+                    if t:
+                        yukare_all_tags.add(t)
+
             for char_name in char_names:
                 if char_img:
                     yukare_character_images[char_name] = char_img.group(1).strip()
@@ -68,3 +81,4 @@ init -10 python:
 
     parse_yukare_scenes()
     yukare_characters.sort()
+    yukare_all_tags = sorted(list(yukare_all_tags))
