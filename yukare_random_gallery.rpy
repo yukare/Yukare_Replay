@@ -32,7 +32,7 @@ init python:
         if not all_labels:
             if selected_tags:
                 tags_str = ", ".join(selected_tags)
-                renpy.notify("No scenes found with all tags: [tags_str]")
+                renpy.notify("No scenes found with all tags: {}".format(tags_str))
             else:
                 renpy.notify("No scenes found in gallery.")
             return None
