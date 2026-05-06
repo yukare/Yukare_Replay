@@ -53,7 +53,10 @@ style yukare_gallery_label:
 screen yukare_replay_controls():
     zorder 100
     if _in_replay:
-        textbutton "End Replay" action EndReplay(confirm=True) style "yukare_replay_end_button"
+        if yukare_random_mode_active:
+            textbutton "End Replay" action Confirm(_("End the replay?"), [SetVariable("yukare_random_mode_active", False), EndReplay()]) style "yukare_replay_end_button"
+        else:
+            textbutton "End Replay" action EndReplay(confirm=True) style "yukare_replay_end_button"
 
 screen Yukare_Replay_Character_Select():
     tag menu
