@@ -130,8 +130,60 @@ screen Yukare_Replay_Character_Select():
                     text_align 0.5
                     layout "subtitle"
 
-    textbutton "Random Mode" action ui.callsinnewcontext("yukare_random_start") style "yukare_gallery_random_button"
+    textbutton "Random Mode" action ShowMenu("Yukare_Replay_Random_Config") style "yukare_gallery_random_button"
     textbutton "Return" action Return() style "yukare_gallery_return_button"
+
+screen Yukare_Replay_Random_Config():
+    tag menu
+    add "yukare_gallery_bg"
+
+    vbox:
+        align (0.5, 0.1)
+        text "Random Mode Configuration" style "yukare_gallery_title"
+
+    vbox:
+        align (0.5, 0.4)
+        spacing 20
+        
+        text "Select tags to filter random scenes:" style "yukare_gallery_label" size 30 xalign 0.5
+        text "(Scenes must contain ALL selected tags)" style "yukare_gallery_label" size 18 xalign 0.5 italic True
+
+        frame:
+            xsize 1000
+            ysize 400
+            background Solid("#ffffff11")
+            padding (20, 20)
+            xalign 0.5
+
+            viewport:
+                scrollbars "vertical"
+                mousewheel True
+                draggable True
+                
+                vpgrid:
+                    cols 4
+                    spacing 20
+                    xfill True
+                    
+                    textbutton "Clear All" action SetVariable("yukare_selected_tags", []) style "yukare_gallery_button" text_size 22:
+                        if not yukare_selected_tags:
+                            text_color "#0f0"
+
+                    for t in yukare_all_tags:
+                        textbutton t action ToggleSetMembership(yukare_selected_tags, t) style "yukare_gallery_button" text_size 22:
+                            if t in yukare_selected_tags:
+                                text_color "#0f0"
+
+    vbox:
+        align (0.5, 0.8)
+        spacing 30
+        
+        textbutton "START RANDOM MODE" action ui.callsinnewcontext("yukare_random_start") style "yukare_gallery_button":
+            text_size 40
+            text_hover_color "#ff0"
+            xalign 0.5
+
+    textbutton "Return" action ShowMenu("Yukare_Replay_Character_Select") style "yukare_gallery_return_button"
 
 screen Yukare_Replay_Scene_Select(char_name):
     tag menu
