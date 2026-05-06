@@ -4,10 +4,16 @@
 
 # Initialize variables safely
 default persistent.yukare_played_random = []
-default yukare_random_mode_active = False
+default persistent.yukare_random_mode_active = False
 
 init python:
     import random
+
+    def stop_yukare_random_mode():
+        """Stops the random mode and ends any ongoing replay."""
+        persistent.yukare_random_mode_active = False
+        if getattr(store, '_in_replay', False):
+            renpy.end_replay()
 
     def get_next_random_yukare_scene():
         """Selects the next random scene label and returns it."""
@@ -57,18 +63,18 @@ init python:
 
 # Label based loop to avoid deep recursion with renpy.replay
 label yukare_random_start:
-    $ yukare_random_mode_active = True
+    $ persistent.yukare_random_mode_active = True
     jump yukare_random_loop
 
 label yukare_random_loop:
-    if not yukare_random_mode_active:
+    if not persistent.yukare_random_mode_active:
         return
 
     $ next_scene = get_next_random_yukare_scene()
     
     if next_scene is None:
         $ renpy.notify("No scenes found in gallery.")
-        $ yukare_random_mode_active = False
+        $ persistent.yukare_random_mode_active = False
         return
 
     # Execute the replay sem o argumento 'locked' que causa erro.
@@ -82,15 +88,15 @@ label yukare_random_loop:
         
         for sn in screens_to_check:
             if renpy.get_screen(sn):
-                yukare_random_mode_active = False
+                persistent.yukare_random_mode_active = False
                 break
 
-    if not yukare_random_mode_active:
+    if not persistent.yukare_random_mode_active:
         return
 
     # Continua se não houver interrupção detectada
     jump yukare_random_loop
 
 label yukare_random_stop:
-    $ yukare_random_mode_active = False
+    $ persistent.yukare_random_mode_active = False
     return
