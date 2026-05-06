@@ -169,6 +169,10 @@ screen Yukare_Replay_Random_Config():
                         if not yukare_selected_tags:
                             text_color "#0f0"
 
+                    textbutton "Select All" action SetVariable("yukare_selected_tags", list(yukare_all_tags)) style "yukare_gallery_button" text_size 22:
+                        if len(yukare_selected_tags) == len(yukare_all_tags) and len(yukare_all_tags) > 0:
+                            text_color "#0f0"
+
                     for t in yukare_all_tags:
                         textbutton t action ToggleSetMembership(yukare_selected_tags, t) style "yukare_gallery_button" text_size 22:
                             if t in yukare_selected_tags:
@@ -210,6 +214,10 @@ screen Yukare_Replay_Scene_Select(char_name):
                 yalign 0.5
                 textbutton "All" action SetVariable("yukare_selected_tags", []) style "yukare_gallery_button" text_size 20 yalign 0.5:
                     if not yukare_selected_tags:
+                        text_color "#0f0"
+                
+                textbutton "Select All" action SetVariable("yukare_selected_tags", list(yukare_all_tags)) style "yukare_gallery_button" text_size 20 yalign 0.5:
+                    if len(yukare_selected_tags) == len(yukare_all_tags) and len(yukare_all_tags) > 0:
                         text_color "#0f0"
                 
                 for t in yukare_all_tags:
