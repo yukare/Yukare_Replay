@@ -15,19 +15,41 @@ init python:
         selected_tags = getattr(store, 'yukare_selected_tags', [])
         
         all_labels = []
+        # Normalização das tags selecionadas (lower case e sem espaços)
+        clean_selected = [t.strip().lower() for t in selected_tags if t.strip()]
+
         for char_scenes in all_scenes_dict.values():
             for s in char_scenes:
-                if not selected_tags or all(tag in s.tag_list for tag in selected_tags):
+                if not clean_selected:
                     all_labels.append(s.label)
+                else:
+                    # Normalização das tags da cena
+                    scene_tags_lower = [t.lower() for t in s.tag_list]
+                    # Verifica se TODAS as tags selecionadas estão presentes na cena
+                    if all(tag in scene_tags_lower for tag in clean_selected):
+                        all_labels.append(s.label)
         
         if not all_labels:
+            if selected_tags:
+                tags_str = ", ".join(selected_tags)
+                renpy.notify("No scenes found with all tags: [tags_str]")
+            else:
+                renpy.notify("No scenes found in gallery.")
             return None
 
-        available = [s for s in all_labels if s not in persistent.yukare_played_random]
+        # Remover duplicatas mantendo a ordem (caso a mesma cena apareça em vários personagens)
+        unique_labels = []
+        for l in all_labels:
+            if l not in unique_labels:
+                unique_labels.append(l)
+
+        available = [l for l in unique_labels if l not in persistent.yukare_played_random]
 
         if not available:
-            persistent.yukare_played_random = []
-            available = all_labels
+            # Se todas as cenas filtradas já foram jogadas, resetamos o histórico apenas para as cenas filtradas
+            # ou resetamos tudo se preferir. Aqui resetamos tudo para simplificar.
+            persistent.yukare_played_random = [l for l in persistent.yukare_played_random if l not in unique_labels]
+            available = unique_labels
 
         chosen = random.choice(available)
         persistent.yukare_played_random.append(chosen)
