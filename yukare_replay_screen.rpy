@@ -219,7 +219,7 @@ screen Yukare_Replay_Scene_Select(char_name):
 
     $ current_scenes = yukare_scenes.get(char_name, [])
     if yukare_selected_tags:
-        $ current_scenes = [s for s in current_scenes if all(tag in s.tag_list for tag in yukare_selected_tags)]
+        $ current_scenes = [s for s in current_scenes if any(tag in s.tag_list for tag in yukare_selected_tags)]
 
     viewport:
         align (0.5, 0.6)

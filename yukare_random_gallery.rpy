@@ -25,14 +25,14 @@ init python:
                 else:
                     # Normalização das tags da cena
                     scene_tags_lower = [t.lower() for t in s.tag_list]
-                    # Verifica se TODAS as tags selecionadas estão presentes na cena
-                    if all(tag in scene_tags_lower for tag in clean_selected):
+                    # Verifica se PELO MENOS UMA das tags selecionadas está presente na cena (Lógica OR)
+                    if any(tag in scene_tags_lower for tag in clean_selected):
                         all_labels.append(s.label)
         
         if not all_labels:
             if selected_tags:
                 tags_str = ", ".join(selected_tags)
-                renpy.notify("No scenes found with all tags: {}".format(tags_str))
+                renpy.notify("No scenes found with any of these tags: {}".format(tags_str))
             else:
                 renpy.notify("No scenes found in gallery.")
             return None
