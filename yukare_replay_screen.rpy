@@ -216,18 +216,24 @@ screen Yukare_Replay_Scene_Select(char_name):
                     if not yukare_selected_tags:
                         text_color "#0f0"
                 
-                textbutton "Select All" action SetVariable("yukare_selected_tags", list(yukare_all_tags)) style "yukare_gallery_button" text_size 20 yalign 0.5:
-                    if len(yukare_selected_tags) == len(yukare_all_tags) and len(yukare_all_tags) > 0:
-                        text_color "#0f0"
-                
                 for t in yukare_all_tags:
                     textbutton t action ToggleSetMembership(yukare_selected_tags, t) style "yukare_gallery_button" text_size 20 yalign 0.5:
                         if t in yukare_selected_tags:
                             text_color "#0f0"
 
-    $ current_scenes = yukare_scenes.get(char_name, [])
-    if yukare_selected_tags:
-        $ current_scenes = [s for s in current_scenes if any(tag in s.tag_list for tag in yukare_selected_tags)]
+    python:
+        current_scenes = yukare_scenes.get(char_name, [])
+        if yukare_selected_tags:
+            temp_scenes = []
+            for scene_obj in current_scenes:
+                found = False
+                for t in yukare_selected_tags:
+                    if t in scene_obj.tag_list:
+                        found = True
+                        break
+                if found:
+                    temp_scenes.append(scene_obj)
+            current_scenes = temp_scenes
 
     viewport:
         align (0.5, 0.6)
