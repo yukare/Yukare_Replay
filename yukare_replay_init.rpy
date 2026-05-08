@@ -131,4 +131,25 @@ init -5 python:
 
         yukare_all_tags = sorted(list(yukare_all_tags))
 
+    def get_yukare_stats(char_name=None):
+        """
+        Calculates (unlocked_count, total_count, percentage) for a character or globally.
+        """
+        scenes = []
+        if char_name:
+            scenes = yukare_scenes.get(char_name, [])
+        else:
+            # Global stats using the "All" category
+            scenes = yukare_scenes.get("All", [])
+
+        if not scenes:
+            return 0, 0, 0
+
+        total = len(scenes)
+        unlocked = sum(1 for s in scenes if s.is_unlocked)
+        percentage = int((float(unlocked) / total) * 100) if total > 0 else 0
+        
+        return unlocked, total, percentage
+
+    # Initial parse
     parse_yukare_scenes()

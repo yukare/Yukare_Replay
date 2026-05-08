@@ -68,7 +68,17 @@ screen Yukare_Replay_Character_Select():
 
     vbox:
         align (0.5, 0.05)
+        spacing 10
         text "Scene Replay Gallery" style "yukare_gallery_title"
+        
+        # Global Progress Bar
+        $ u_all, t_all, p_all = get_yukare_stats()
+        if t_all > 0:
+            hbox:
+                xalign 0.5
+                spacing 15
+                bar value u_all range t_all xsize 400 ysize 20 yalign 0.5
+                text "[p_all]% Complete ([u_all]/[t_all])" style "yukare_gallery_label" size 16 yalign 0.5
 
     # Toggle for Lock System
     hbox:
@@ -115,6 +125,14 @@ screen Yukare_Replay_Character_Select():
                             xalign 0.5
                             hovered SetScreenVariable("hovered_char", c)
                             unhovered SetScreenVariable("hovered_char", None)
+
+                        # Individual Character Stats
+                        $ u_c, t_c, p_c = get_yukare_stats(c)
+                        text "[u_c] / [t_c]":
+                            style "yukare_gallery_label"
+                            size 14
+                            xalign 0.5
+                            alpha 0.7
 
                         $ char_desc = yukare_character_descriptions.get(c, "")
                         if char_desc:
