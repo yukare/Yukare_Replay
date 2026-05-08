@@ -61,7 +61,7 @@ screen yukare_replay_controls():
 screen Yukare_Replay_Character_Select():
     tag menu
     add "yukare_gallery_bg"
-    on "show" action SetVariable("yukare_selected_tags", [])
+    on "show" action [SetVariable("yukare_selected_tags", []), SetVariable("pc_name", persistent.yukare_pc_name)]
     
     # Variável para rastrear qual personagem está sob o mouse
     default hovered_char = None
@@ -318,7 +318,7 @@ screen Yukare_Replay_Scene_Select(char_name):
                             if is_unlocked:
                                 idle Transform(display_thumb, zoom=0.18)
                                 hover Transform(display_thumb, zoom=0.19, matrixcolor=BrightnessMatrix(0.25) * ContrastMatrix(1.25))
-                                action Replay(s.label, locked=False)
+                                action [SetVariable("pc_name", persistent.yukare_pc_name), Replay(s.label, locked=False)]
                             else:
                                 idle Transform(display_thumb, zoom=0.18, matrixcolor=SaturationMatrix(0.0)*BrightnessMatrix(-0.5))
                                 action Notify("This scene is locked. Play the game to unlock it!")
