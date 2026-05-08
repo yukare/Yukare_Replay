@@ -110,7 +110,7 @@ screen Yukare_Replay_Character_Select():
                     spacing 10
                     imagebutton:
                         idle Transform(char_thumb, zoom=0.2)
-                        hover Transform(char_thumb, zoom=0.21)
+                        hover Transform(char_thumb, zoom=0.21, matrixcolor=BrightnessMatrix(0.2) * ContrastMatrix(1.2))
                         action ShowMenu("Yukare_Replay_Scene_Select", char_name=c)
                         hovered SetScreenVariable("hovered_char", c)
                         unhovered SetScreenVariable("hovered_char", None)
@@ -132,7 +132,7 @@ screen Yukare_Replay_Character_Select():
                             style "yukare_gallery_label"
                             size 14
                             xalign 0.5
-                            alpha 0.7
+                            color "#ffffffb3"
 
                         $ char_desc = yukare_character_descriptions.get(c, "")
                         if char_desc:
@@ -289,7 +289,7 @@ screen Yukare_Replay_Scene_Select(char_name):
                     imagebutton:
                         if is_unlocked:
                             idle Transform(display_thumb, zoom=0.18)
-                            hover Transform(display_thumb, zoom=0.19)
+                            hover Transform(display_thumb, zoom=0.19, matrixcolor=BrightnessMatrix(0.25) * ContrastMatrix(1.25))
                             action Replay(s.label, locked=False)
                         else:
                             idle Transform(display_thumb, zoom=0.18, matrixcolor=SaturationMatrix(0.0)*BrightnessMatrix(-0.5))
