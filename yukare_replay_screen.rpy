@@ -67,8 +67,19 @@ screen Yukare_Replay_Character_Select():
     default hovered_char = None
 
     vbox:
-        align (0.5, 0.1)
+        align (0.5, 0.05)
         text "Scene Replay Gallery" style "yukare_gallery_title"
+
+    # Toggle for Lock System
+    hbox:
+        align (0.95, 0.05)
+        spacing 10
+        text "Gallery Lock:" style "yukare_gallery_label" size 18 yalign 0.5
+        textbutton ("[persistent.yukare_lock_enabled]"):
+            action ToggleField(persistent, "yukare_lock_enabled")
+            style "yukare_gallery_button"
+            text_size 18
+            text_color ("#0f0" if persistent.yukare_lock_enabled else "#f00")
 
     viewport:
         align (0.5, 0.5)
@@ -252,18 +263,23 @@ screen Yukare_Replay_Scene_Select(char_name):
             xfill True
 
             for s in current_scenes:
+                $ is_unlocked = s.is_unlocked
                 $ display_thumb = s.scene_image if s.scene_image else (s.image if s.image else s.thumbnail)
                 vbox:
                     spacing 15
                     xsize 400
                     imagebutton:
-                        idle Transform(display_thumb, zoom=0.18)
-                        hover Transform(display_thumb, zoom=0.19)
-                        action Replay(s.label, locked=False)
+                        if is_unlocked:
+                            idle Transform(display_thumb, zoom=0.18)
+                            hover Transform(display_thumb, zoom=0.19)
+                            action Replay(s.label, locked=False)
+                        else:
+                            idle Transform(display_thumb, zoom=0.18, matrixcolor=SaturationMatrix(0.0)*BrightnessMatrix(-0.5))
+                            action Notify("This scene is locked. Play the game to unlock it!")
                         align (0.5, 0.5)
 
                     if s.title:
-                        text "[s.title]":
+                        text (s.title if is_unlocked else "???"):
                             style "yukare_gallery_label"
                             xalign 0.5
                             text_align 0.5

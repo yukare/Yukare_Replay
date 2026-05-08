@@ -3,7 +3,7 @@ init -5 python:
     import os
 
     class YukareScene(object):
-        def __init__(self, label, character, title, tags, image=None, scene_image=None):
+        def __init__(self, label, character, title, tags, image=None, scene_image=None, origin=None):
             self.label = label
             self.character = character
             self.title = title
@@ -11,7 +11,20 @@ init -5 python:
             self.tag_list = [t.strip() for t in tags.split(",")] if tags else []
             self.image = image
             self.scene_image = scene_image
+            self.origin = origin # The original game label to check for "seen" status
             self.thumbnail = "Yukare_Replay/images/img.webp" # Default thumbnail
+
+        @property
+        def is_unlocked(self):
+            # If lock is disabled, everything is unlocked
+            if not persistent.yukare_lock_enabled:
+                return True
+            # If no origin is specified, it's always unlocked (backward compatibility)
+            if not self.origin:
+                return True
+            # Check if the player has seen the original label in the game
+            import renpy
+            return renpy.seen_label(self.origin)
 
     yukare_scenes = {}
     yukare_characters = []
@@ -76,6 +89,7 @@ init -5 python:
                 scene_img_match = re.search(r"##@scene_image\s+(.*)", label_content, re.IGNORECASE)
                 char_img_match = re.search(r"##@char_image\s+(.*)", label_content, re.IGNORECASE)
                 char_desc_match = re.search(r"##@char_description\s+(.*)", label_content, re.IGNORECASE)
+                origin_match = re.search(r"##@origin\s+(.*)", label_content, re.IGNORECASE)
 
                 char_raw = char_match.group(2).strip()
                 char_names = [c.strip() for c in char_raw.split(",")]
@@ -83,13 +97,14 @@ init -5 python:
                 scene_tags = tags_match.group(1).strip() if tags_match else ""
                 scene_image_path = image_match.group(1).strip() if image_match else None
                 specific_scene_image = scene_img_match.group(1).strip() if scene_img_match else None
+                scene_origin = origin_match.group(1).strip() if origin_match else None
 
                 if scene_tags:
                     for t in [t.strip() for t in scene_tags.split(",")]:
                         if t:
                             yukare_all_tags.add(t)
 
-                new_scene = YukareScene(label_name, char_raw, scene_title, scene_tags, scene_image_path, specific_scene_image)
+                new_scene = YukareScene(label_name, char_raw, scene_title, scene_tags, scene_image_path, specific_scene_image, scene_origin)
                 all_scenes_list.append(new_scene)
 
                 for char_name in char_names:
@@ -111,7 +126,7 @@ init -5 python:
         if all_scenes_list:
             yukare_characters.insert(0, "All")
             yukare_scenes["All"] = all_scenes_list
-            yukare_character_images["All"] = "Yukare_Replay/images/img.webp" # Default icon for All
+            yukare_character_images["All"] = "Yukare_Replay/images/img.webp"
             yukare_character_descriptions["All"] = "All available scenes"
 
         yukare_all_tags = sorted(list(yukare_all_tags))
