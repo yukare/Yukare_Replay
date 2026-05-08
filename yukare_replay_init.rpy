@@ -128,6 +128,12 @@ init -5 python:
             yukare_scenes["All"] = all_scenes_list
             yukare_character_images["All"] = "Yukare_Replay/images/img.webp"
             yukare_character_descriptions["All"] = "All available scenes"
+            
+            # Add "Favorites" option
+            yukare_characters.insert(1, "Favorites")
+            yukare_scenes["Favorites"] = [] # Dynamically filtered in UI but registered here
+            yukare_character_images["Favorites"] = "Yukare_Replay/images/img.webp"
+            yukare_character_descriptions["Favorites"] = "Your favorite scenes"
 
         yukare_all_tags = sorted(list(yukare_all_tags))
 

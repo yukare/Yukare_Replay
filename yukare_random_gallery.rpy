@@ -26,6 +26,10 @@ init python:
 
         for char_scenes in all_scenes_dict.values():
             for s in char_scenes:
+                # Se o modo favoritos estiver ativo, ignora o que não for favorito
+                if persistent.yukare_random_favorites_only and s.label not in persistent.yukare_favorites:
+                    continue
+
                 if not clean_selected:
                     all_labels.append(s.label)
                 else:

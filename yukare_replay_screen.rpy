@@ -127,12 +127,20 @@ screen Yukare_Replay_Character_Select():
                             unhovered SetScreenVariable("hovered_char", None)
 
                         # Individual Character Stats
-                        $ u_c, t_c, p_c = get_yukare_stats(c)
-                        text "[u_c] / [t_c]":
-                            style "yukare_gallery_label"
-                            size 14
-                            xalign 0.5
-                            color "#ffffffb3"
+                        if c == "Favorites":
+                            $ fav_count = len(persistent.yukare_favorites)
+                            text "[fav_count] Favorites":
+                                style "yukare_gallery_label"
+                                size 14
+                                xalign 0.5
+                                color "#ffffffb3"
+                        else:
+                            $ u_c, t_c, p_c = get_yukare_stats(c)
+                            text "[u_c] / [t_c]":
+                                style "yukare_gallery_label"
+                                size 14
+                                xalign 0.5
+                                color "#ffffffb3"
 
                         $ char_desc = yukare_character_descriptions.get(c, "")
                         if char_desc:
@@ -211,13 +219,25 @@ screen Yukare_Replay_Random_Config():
                                 text_color "#0f0"
 
     vbox:
-        align (0.5, 0.8)
-        spacing 30
+        align (0.5, 0.82)
+        spacing 15
         
-        textbutton "START RANDOM MODE" action ui.callsinnewcontext("yukare_random_start") style "yukare_gallery_button":
-            text_size 40
-            text_hover_color "#ff0"
+        hbox:
             xalign 0.5
+            spacing 20
+            textbutton "START RANDOM MODE" action ui.callsinnewcontext("yukare_random_start") style "yukare_gallery_button":
+                text_size 40
+                text_hover_color "#ff0"
+            
+            vbox:
+                yalign 0.5
+                text "Favorites Only:" style "yukare_gallery_label" size 14 xalign 0.5
+                textbutton ("[persistent.yukare_random_favorites_only]"):
+                    action ToggleField(persistent, "yukare_random_favorites_only")
+                    style "yukare_gallery_button"
+                    text_size 16
+                    text_color ("#0f0" if persistent.yukare_random_favorites_only else "#f00")
+                    xalign 0.5
 
     textbutton "Return" action ShowMenu("Yukare_Replay_Character_Select") style "yukare_gallery_return_button"
 
@@ -254,7 +274,12 @@ screen Yukare_Replay_Scene_Select(char_name):
                             text_color "#0f0"
 
     python:
-        current_scenes = yukare_scenes.get(char_name, [])
+        # If the virtual category "Favorites" is selected, filter All scenes by their presence in persistent.yukare_favorites
+        if char_name == "Favorites":
+            current_scenes = [s for s in yukare_scenes.get("All", []) if s.label in persistent.yukare_favorites]
+        else:
+            current_scenes = yukare_scenes.get(char_name, [])
+
         if yukare_selected_tags:
             temp_scenes = []
             for scene_obj in current_scenes:
@@ -286,15 +311,29 @@ screen Yukare_Replay_Scene_Select(char_name):
                 vbox:
                     spacing 15
                     xsize 400
-                    imagebutton:
+                    fixed:
+                        xsize 400
+                        ysize 250
+                        imagebutton:
+                            if is_unlocked:
+                                idle Transform(display_thumb, zoom=0.18)
+                                hover Transform(display_thumb, zoom=0.19, matrixcolor=BrightnessMatrix(0.25) * ContrastMatrix(1.25))
+                                action Replay(s.label, locked=False)
+                            else:
+                                idle Transform(display_thumb, zoom=0.18, matrixcolor=SaturationMatrix(0.0)*BrightnessMatrix(-0.5))
+                                action Notify("This scene is locked. Play the game to unlock it!")
+                            align (0.5, 0.5)
+
                         if is_unlocked:
-                            idle Transform(display_thumb, zoom=0.18)
-                            hover Transform(display_thumb, zoom=0.19, matrixcolor=BrightnessMatrix(0.25) * ContrastMatrix(1.25))
-                            action Replay(s.label, locked=False)
-                        else:
-                            idle Transform(display_thumb, zoom=0.18, matrixcolor=SaturationMatrix(0.0)*BrightnessMatrix(-0.5))
-                            action Notify("This scene is locked. Play the game to unlock it!")
-                        align (0.5, 0.5)
+                            # Favorite Toggle Button (Heart)
+                            $ is_fav = s.label in persistent.yukare_favorites
+                            textbutton ("♥" if is_fav else "♡"):
+                                action ToggleSetMembership(persistent.yukare_favorites, s.label)
+                                xalign 0.9
+                                yalign 0.1
+                                text_size 40
+                                text_color ("#f00" if is_fav else "#fff")
+                                text_outlines [(2, "#000", 0, 0)]
 
                     if s.title:
                         text (s.title if is_unlocked else "???"):
