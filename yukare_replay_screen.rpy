@@ -53,54 +53,69 @@ style yukare_gallery_label:
 screen yukare_replay_controls():
     zorder 100
     if _in_replay:
-        # Mini Menu no canto superior esquerdo
+        # Variável para o tooltip
+        default my_tooltip = ""
+
+        # Mini Menu no canto superior direito
         hbox:
-            align (0.02, 0.02)
-            spacing 10
+            align (0.98, 0.02)
+            spacing 5
             
-            # Botão Ocultar Texto
+            # Botão Ocultar Interface
             button:
-                xsize 40 ysize 40
-                idle_background Transform(Solid("#0008"), xsize=40, ysize=40)
-                hover_background Transform(Solid("#000c"), xsize=40, ysize=40)
+                xsize 60 ysize 35
+                idle_background Transform(Solid("#000a"), xsize=60, ysize=35)
+                hover_background Transform(Solid("#FF86C2cc"), xsize=60, ysize=35)
                 action HideInterface()
-                tooltip "Hide UI"
+                hovered SetScreenVariable("my_tooltip", "HIDE UI")
+                unhovered SetScreenVariable("my_tooltip", "")
                 
-                text "👁" align (0.5, 0.5) size 20 color "#fff"
+                text "HIDE" align (0.5, 0.5) size 14 color "#fff" bold True
 
-            # Botão Próxima Imagem (Pular para próximo comando 'scene')
+            # Botão Skip (Próxima Imagem)
             button:
-                xsize 40 ysize 40
-                idle_background Transform(Solid("#0008"), xsize=40, ysize=40)
-                hover_background Transform(Solid("#000c"), xsize=40, ysize=40)
+                xsize 60 ysize 35
+                idle_background Transform(Solid("#000a"), xsize=60, ysize=35)
+                hover_background Transform(Solid("#FF86C2cc"), xsize=60, ysize=35)
                 action Skip() alternate Skip(fast=True)
-                tooltip "Fast Forward"
+                hovered SetScreenVariable("my_tooltip", "FAST FORWARD")
+                unhovered SetScreenVariable("my_tooltip", "")
 
-                text "⏭" align (0.5, 0.5) size 20 color "#fff"
+                text "SKIP" align (0.5, 0.5) size 14 color "#fff" bold True
 
-            # Botão Loop (Toggle)
+            # Botão Loop
             $ is_loop = getattr(store, "yukare_replay_loop", False)
             button:
-                xsize 40 ysize 40
-                idle_background Transform(Solid("#0008"), xsize=40, ysize=40)
-                hover_background Transform(Solid("#000c"), xsize=40, ysize=40)
+                xsize 60 ysize 35
+                idle_background Transform(Solid("#000a"), xsize=60, ysize=35)
+                hover_background Transform(Solid("#FF86C2cc"), xsize=60, ysize=35)
                 action ToggleVariable("yukare_replay_loop")
-                tooltip "Toggle Loop"
+                hovered SetScreenVariable("my_tooltip", "TOGGLE LOOP")
+                unhovered SetScreenVariable("my_tooltip", "")
 
-                text "🔄" align (0.5, 0.5) size 20 color ("#0f0" if is_loop else "#fff")
+                text "LOOP" align (0.5, 0.5) size 14 color ("#0f0" if is_loop else "#fff") bold True
 
             # Botão Sair do Replay
             button:
-                xsize 40 ysize 40
-                idle_background Transform(Solid("#0008"), xsize=40, ysize=40)
-                hover_background Transform(Solid("#000c"), xsize=40, ysize=40)
+                xsize 40 ysize 35
+                idle_background Transform(Solid("#f44336aa"), xsize=40, ysize=35)
+                hover_background Transform(Solid("#f44336"), xsize=40, ysize=35)
                 if persistent.yukare_random_mode_active:
                     action Confirm(_("End the replay?"), Function(stop_yukare_random_mode))
                 else:
                     action EndReplay(confirm=True)
-                tooltip "Exit Replay"
+                hovered SetScreenVariable("my_tooltip", "EXIT REPLAY")
+                unhovered SetScreenVariable("my_tooltip", "")
 
-                text "✖" align (0.5, 0.5) size 20 color "#f44336"
+                text "X" align (0.5, 0.5) size 18 color "#fff" bold True
+
+        # Tooltip simplificado e compatível
+        if my_tooltip:
+            frame:
+                align (0.97, 0.07)
+                background Solid("#000c")
+                padding (8, 4)
+                text "[my_tooltip]" size 12 color "#FF86C2"
 
 screen Yukare_Replay_Character_Select():
     tag menu
