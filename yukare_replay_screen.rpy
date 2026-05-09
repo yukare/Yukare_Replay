@@ -318,7 +318,7 @@ screen Yukare_Replay_Scene_Select(char_name):
                             if is_unlocked:
                                 idle Transform(display_thumb, zoom=0.18)
                                 hover Transform(display_thumb, zoom=0.19, matrixcolor=BrightnessMatrix(0.25) * ContrastMatrix(1.25))
-                                action [SetVariable("pc_name", persistent.yukare_pc_name), Replay(s.label, locked=False)]
+                                action Replay(s.label, scope={"pc_name": persistent.yukare_pc_name}, locked=False)
                             else:
                                 idle Transform(display_thumb, zoom=0.18, matrixcolor=SaturationMatrix(0.0)*BrightnessMatrix(-0.5))
                                 action Notify("This scene is locked. Play the game to unlock it!")

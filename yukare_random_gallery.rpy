@@ -82,7 +82,7 @@ label yukare_random_loop:
         return
 
     # Execute the replay sem o argumento 'locked' que causa erro.
-    $ renpy.call_replay(next_scene)
+    $ renpy.call_replay(next_scene, scope={"pc_name": persistent.yukare_pc_name})
     
     # Se o usuário clicar em "End Replay", o Ren'Py retorna para este ponto.
     # Verificamos se alguma tela de menu ou galeria está visível agora.

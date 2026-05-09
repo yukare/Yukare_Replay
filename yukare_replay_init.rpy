@@ -126,13 +126,41 @@ init -5 python:
         if all_scenes_list:
             yukare_characters.insert(0, "All")
             yukare_scenes["All"] = all_scenes_list
-            yukare_character_images["All"] = "Yukare_Replay/images/img.webp"
+            
+            # Check for custom "All" image
+            import renpy
+            def is_loadable(img):
+                try:
+                    return renpy.exports.loadable(img)
+                except AttributeError:
+                    try:
+                        return renpy.loadable(img)
+                    except AttributeError:
+                        return False
+
+            all_img = "Yukare_Replay/images/All.webp"
+            if not is_loadable(all_img):
+                all_img = "Yukare_Replay/images/All.png"
+            if not is_loadable(all_img):
+                # If no file exists, use a stylized Solid placeholder
+                all_img = "#34495e" # A nice dark blue-grey
+            
+            yukare_character_images["All"] = all_img
             yukare_character_descriptions["All"] = "All available scenes"
             
             # Add "Favorites" option
             yukare_characters.insert(1, "Favorites")
-            yukare_scenes["Favorites"] = [] # Dynamically filtered in UI but registered here
-            yukare_character_images["Favorites"] = "Yukare_Replay/images/img.webp"
+            yukare_scenes["Favorites"] = []
+            
+            # Check for custom "Favorites" image
+            fav_img = "Yukare_Replay/images/Favorites.webp"
+            if not is_loadable(fav_img):
+                fav_img = "Yukare_Replay/images/Favorites.png"
+            if not is_loadable(fav_img):
+                # If no file exists, use a stylized Solid placeholder (heart-like color)
+                fav_img = "#9b59b6" # A nice purple
+                
+            yukare_character_images["Favorites"] = fav_img
             yukare_character_descriptions["Favorites"] = "Your favorite scenes"
 
         yukare_all_tags = sorted(list(yukare_all_tags))
