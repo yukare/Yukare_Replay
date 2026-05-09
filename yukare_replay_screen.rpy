@@ -59,18 +59,20 @@ screen yukare_replay_controls():
             spacing 10
             
             # Botão Ocultar Texto
-            imagebutton:
-                idle Transform(Solid("#0008"), xsize=40, ysize=40)
-                hover Transform(Solid("#000c"), xsize=40, ysize=40)
+            button:
+                xsize 40 ysize 40
+                idle_background Transform(Solid("#0008"), xsize=40, ysize=40)
+                hover_background Transform(Solid("#000c"), xsize=40, ysize=40)
                 action Preference("hide windows")
                 tooltip "Hide UI"
                 
                 text "👁" align (0.5, 0.5) size 20 color "#fff"
 
             # Botão Próxima Imagem (Pular para próximo comando 'scene')
-            imagebutton:
-                idle Transform(Solid("#0008"), xsize=40, ysize=40)
-                hover Transform(Solid("#000c"), xsize=40, ysize=40)
+            button:
+                xsize 40 ysize 40
+                idle_background Transform(Solid("#0008"), xsize=40, ysize=40)
+                hover_background Transform(Solid("#000c"), xsize=40, ysize=40)
                 action Skip() alternate Skip(fast=True)
                 tooltip "Fast Forward"
 
@@ -78,18 +80,20 @@ screen yukare_replay_controls():
 
             # Botão Loop (Toggle)
             $ is_loop = getattr(store, "yukare_replay_loop", False)
-            imagebutton:
-                idle Transform(Solid("#0008"), xsize=40, ysize=40)
-                hover Transform(Solid("#000c"), xsize=40, ysize=40)
+            button:
+                xsize 40 ysize 40
+                idle_background Transform(Solid("#0008"), xsize=40, ysize=40)
+                hover_background Transform(Solid("#000c"), xsize=40, ysize=40)
                 action ToggleVariable("yukare_replay_loop")
                 tooltip "Toggle Loop"
 
                 text "🔄" align (0.5, 0.5) size 20 color ("#0f0" if is_loop else "#fff")
 
             # Botão Sair do Replay
-            imagebutton:
-                idle Transform(Solid("#0008"), xsize=40, ysize=40)
-                hover Transform(Solid("#000c"), xsize=40, ysize=40)
+            button:
+                xsize 40 ysize 40
+                idle_background Transform(Solid("#0008"), xsize=40, ysize=40)
+                hover_background Transform(Solid("#000c"), xsize=40, ysize=40)
                 if persistent.yukare_random_mode_active:
                     action Confirm(_("End the replay?"), Function(stop_yukare_random_mode))
                 else:
