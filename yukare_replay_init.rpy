@@ -24,7 +24,10 @@ init -5 python:
                 return True
             # Check if the player has seen the original label in the game
             import renpy
-            return renpy.seen_label(self.origin)
+            try:
+                return renpy.exports.seen_label(self.origin)
+            except AttributeError:
+                return renpy.seen_label(self.origin)
 
     yukare_scenes = {}
     yukare_characters = []
