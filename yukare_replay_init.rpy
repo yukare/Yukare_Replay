@@ -213,3 +213,12 @@ init -5 python:
 
     # Initial parse
     parse_yukare_scenes()
+
+    def reload_yukare_data():
+        parse_yukare_scenes()
+        renpy.notify("Gallery Reloaded!")
+        renpy.restart_interaction()
+
+    # Define the shortcut Ctrl + R
+    config.keymap['reload_yukare'] = ['ctrl_K_r']
+    config.underlay.append(renpy.Keymap(reload_yukare=reload_yukare_data))
