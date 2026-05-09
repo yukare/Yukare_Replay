@@ -47,6 +47,20 @@ init -5 python:
     if "yukare_replay_loop" not in default_store:
         default_store["yukare_replay_loop"] = False
 
+    # Safety initialization for persistent variables
+    if persistent.yukare_favorites is None:
+        persistent.yukare_favorites = []
+    if persistent.yukare_lock_enabled is None:
+        persistent.yukare_lock_enabled = True
+    if persistent.yukare_pc_name is None:
+        persistent.yukare_pc_name = "MC"
+    if persistent.yukare_random_favorites_only is None:
+        persistent.yukare_random_favorites_only = False
+    if persistent.yukare_played_random is None:
+        persistent.yukare_played_random = []
+    if persistent.yukare_random_mode_active is None:
+        persistent.yukare_random_mode_active = False
+
     def parse_yukare_scenes():
         global yukare_scenes, yukare_characters, yukare_character_images, yukare_all_tags, yukare_character_descriptions
 
