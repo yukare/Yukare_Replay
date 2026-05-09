@@ -63,7 +63,7 @@ screen yukare_replay_controls():
                 xsize 40 ysize 40
                 idle_background Transform(Solid("#0008"), xsize=40, ysize=40)
                 hover_background Transform(Solid("#000c"), xsize=40, ysize=40)
-                action Preference("hide windows")
+                action HideInterface()
                 tooltip "Hide UI"
                 
                 text "👁" align (0.5, 0.5) size 20 color "#fff"
@@ -101,16 +101,6 @@ screen yukare_replay_controls():
                 tooltip "Exit Replay"
 
                 text "✖" align (0.5, 0.5) size 20 color "#f44336"
-
-        # Tooltip display
-        $ tooltip = GetTooltip()
-        if tooltip:
-            nearrect:
-                focus "tooltip"
-                prefer_top True
-                frame:
-                    background Solid("#000a")
-                    text tooltip size 14 color "#fff"
 
 screen Yukare_Replay_Character_Select():
     tag menu
