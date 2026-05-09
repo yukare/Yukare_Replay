@@ -34,6 +34,19 @@ init -5 python:
 
     config.overlay_screens.append("yukare_replay_controls")
 
+    def yukare_replay_callback(label):
+        """Callback executado ao final de um replay para checar loop."""
+        if getattr(store, "yukare_replay_loop", False) and renpy.get_return_stack() == []:
+            # Se o loop está ativo e não há mais nada na pilha, reinicia o replay
+            renpy.call_replay(label, scope={"pc_name": persistent.yukare_pc_name})
+
+    config.replay_scope = {"pc_name": persistent.yukare_pc_name}
+    
+    # Inicializa a variável de loop
+    default_store = renpy.python.store_dicts["store"]
+    if "yukare_replay_loop" not in default_store:
+        default_store["yukare_replay_loop"] = False
+
     def parse_yukare_scenes():
         global yukare_scenes, yukare_characters, yukare_character_images, yukare_all_tags, yukare_character_descriptions
 

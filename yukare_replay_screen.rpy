@@ -53,10 +53,60 @@ style yukare_gallery_label:
 screen yukare_replay_controls():
     zorder 100
     if _in_replay:
-        if persistent.yukare_random_mode_active:
-            textbutton "End Replay" action Confirm(_("End the replay?"), Function(stop_yukare_random_mode)) style "yukare_replay_end_button"
-        else:
-            textbutton "End Replay" action EndReplay(confirm=True) style "yukare_replay_end_button"
+        # Mini Menu no canto superior esquerdo
+        hbox:
+            align (0.02, 0.02)
+            spacing 10
+            
+            # Botão Ocultar Texto
+            imagebutton:
+                idle Transform(Solid("#0008"), xsize=40, ysize=40)
+                hover Transform(Solid("#000c"), xsize=40, ysize=40)
+                action Preference("hide windows")
+                tooltip "Hide UI"
+                
+                text "👁" align (0.5, 0.5) size 20 color "#fff"
+
+            # Botão Próxima Imagem (Pular para próximo comando 'scene')
+            imagebutton:
+                idle Transform(Solid("#0008"), xsize=40, ysize=40)
+                hover Transform(Solid("#000c"), xsize=40, ysize=40)
+                action Skip() alternate Skip(fast=True)
+                tooltip "Fast Forward"
+
+                text "⏭" align (0.5, 0.5) size 20 color "#fff"
+
+            # Botão Loop (Toggle)
+            $ is_loop = getattr(store, "yukare_replay_loop", False)
+            imagebutton:
+                idle Transform(Solid("#0008"), xsize=40, ysize=40)
+                hover Transform(Solid("#000c"), xsize=40, ysize=40)
+                action ToggleVariable("yukare_replay_loop")
+                tooltip "Toggle Loop"
+
+                text "🔄" align (0.5, 0.5) size 20 color ("#0f0" if is_loop else "#fff")
+
+            # Botão Sair do Replay
+            imagebutton:
+                idle Transform(Solid("#0008"), xsize=40, ysize=40)
+                hover Transform(Solid("#000c"), xsize=40, ysize=40)
+                if persistent.yukare_random_mode_active:
+                    action Confirm(_("End the replay?"), Function(stop_yukare_random_mode))
+                else:
+                    action EndReplay(confirm=True)
+                tooltip "Exit Replay"
+
+                text "✖" align (0.5, 0.5) size 20 color "#f44336"
+
+        # Tooltip display
+        $ tooltip = GetTooltip()
+        if tooltip:
+            nearrect:
+                focus "tooltip"
+                prefer_top True
+                frame:
+                    background Solid("#000a")
+                    text tooltip size 14 color "#fff"
 
 screen Yukare_Replay_Character_Select():
     tag menu
