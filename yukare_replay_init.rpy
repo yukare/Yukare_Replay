@@ -142,8 +142,9 @@ init -5 python:
             if not is_loadable(all_img):
                 all_img = "Yukare_Replay/images/All.png"
             if not is_loadable(all_img):
-                # If no file exists, use a stylized Solid placeholder
-                all_img = "#34495e" # A nice dark blue-grey
+                # Use a Transform to ensure the Solid placeholder has a fixed size
+                # 1920x1080 (standard 16:9) ensures alignment with character images
+                all_img = Transform(Solid("#34495e"), xsize=1920, ysize=1080)
             
             yukare_character_images["All"] = all_img
             yukare_character_descriptions["All"] = "All available scenes"
@@ -157,8 +158,8 @@ init -5 python:
             if not is_loadable(fav_img):
                 fav_img = "Yukare_Replay/images/Favorites.png"
             if not is_loadable(fav_img):
-                # If no file exists, use a stylized Solid placeholder (heart-like color)
-                fav_img = "#9b59b6" # A nice purple
+                # Use a Transform to ensure the Solid placeholder has a fixed size
+                fav_img = Transform(Solid("#9b59b6"), xsize=1920, ysize=1080)
                 
             yukare_character_images["Favorites"] = fav_img
             yukare_character_descriptions["Favorites"] = "Your favorite scenes"
