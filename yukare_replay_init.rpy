@@ -45,11 +45,6 @@ init -5 python:
 
     config.replay_scope = {"pc_name": persistent.yukare_pc_name}
     
-    # Inicializa a variável de loop
-    default_store = renpy.python.store_dicts["store"]
-    if "yukare_replay_loop" not in default_store:
-        default_store["yukare_replay_loop"] = False
-
     # Safety initialization for persistent variables
     if persistent.yukare_favorites is None:
         persistent.yukare_favorites = []
