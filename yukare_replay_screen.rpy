@@ -1,6 +1,6 @@
 image yukare_gallery_bg:
     # Usa a imagem do menu e aplica uma matriz de brilho para escurecer
-    "gui/main_menu.png"
+    "Yukare_Replay/images/main_menu.png"
     matrixcolor BrightnessMatrix(-0.5)
 
 ###############################################################################
@@ -59,7 +59,7 @@ screen yukare_replay_controls():
         hbox:
             align (0.98, 0.02)
             spacing 5
-            
+
             # Botão Ocultar Interface
             button:
                 xsize 60 ysize 35
@@ -68,7 +68,7 @@ screen yukare_replay_controls():
                 action HideInterface()
                 hovered SetScreenVariable("my_tooltip", "HIDE UI")
                 unhovered SetScreenVariable("my_tooltip", "")
-                
+
                 text "HIDE" align (0.5, 0.5) size 14 color "#fff" bold True
 
             # Botão Skip (Próxima Imagem)
@@ -121,7 +121,7 @@ screen Yukare_Replay_Character_Select():
     tag menu
     add "yukare_gallery_bg"
     on "show" action [SetVariable("yukare_selected_tags", []), SetVariable("pc_name", persistent.yukare_pc_name)]
-    
+
     # Variável para rastrear qual personagem está sob o mouse
     default hovered_char = None
 
@@ -129,7 +129,7 @@ screen Yukare_Replay_Character_Select():
         align (0.5, 0.05)
         spacing 10
         text "Scene Replay Gallery" style "yukare_gallery_title"
-        
+
         # Global Progress Bar
         $ u_all, t_all, p_all = get_yukare_stats()
         if t_all > 0:
@@ -222,7 +222,7 @@ screen Yukare_Replay_Character_Select():
                 xsize 1200
                 padding (20, 20)
                 background Solid("#000000DD")
-                
+
                 text "[hovered_char]: [full_desc]":
                     style "yukare_gallery_label"
                     size 24
@@ -244,7 +244,7 @@ screen Yukare_Replay_Random_Config():
     vbox:
         align (0.5, 0.4)
         spacing 20
-        
+
         text "Select tags to filter random scenes:" style "yukare_gallery_label" size 30 xalign 0.5
         text "(Scenes must contain ALL selected tags)" style "yukare_gallery_label" size 18 xalign 0.5 italic True
 
@@ -259,12 +259,12 @@ screen Yukare_Replay_Random_Config():
                 scrollbars "vertical"
                 mousewheel True
                 draggable True
-                
+
                 vpgrid:
                     cols 4
                     spacing 20
                     xfill True
-                    
+
                     textbutton "Clear All" action SetVariable("yukare_selected_tags", []) style "yukare_gallery_button" text_size 22:
                         if not yukare_selected_tags:
                             text_color "#0f0"
@@ -281,14 +281,14 @@ screen Yukare_Replay_Random_Config():
     vbox:
         align (0.5, 0.82)
         spacing 15
-        
+
         hbox:
             xalign 0.5
             spacing 20
             textbutton "START RANDOM MODE" action ui.callsinnewcontext("yukare_random_start") style "yukare_gallery_button":
                 text_size 32
                 text_hover_color "#ff0"
-            
+
             vbox:
                 yalign 0.5
                 text "Favorites Only:" style "yukare_gallery_label" size 14 xalign 0.5
@@ -315,7 +315,7 @@ screen Yukare_Replay_Scene_Select(char_name):
         align (0.5, 0.15)
         spacing 30
         text "Filter:" style "yukare_gallery_label" size 24 yalign 0.5
-        
+
         viewport:
             xsize 900
             ysize 60
@@ -328,7 +328,7 @@ screen Yukare_Replay_Scene_Select(char_name):
                 textbutton "All" action SetVariable("yukare_selected_tags", []) style "yukare_gallery_button" text_size 20 yalign 0.5:
                     if not yukare_selected_tags:
                         text_color "#0f0"
-                
+
                 for t in yukare_all_tags:
                     textbutton t action ToggleSetMembership(yukare_selected_tags, t) style "yukare_gallery_button" text_size 20 yalign 0.5:
                         if t in yukare_selected_tags:
