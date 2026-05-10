@@ -1,8 +1,7 @@
 image yukare_gallery_bg:
-    # Cria um fundo escuro elegante com uma leve transparência
-    # Se quiser usar uma imagem de fundo, troque Solid por "caminho/da/imagem.jpg"
-    Solid("#121216")
-    alpha 0.95
+    # Usa a imagem do menu e aplica uma matriz de brilho para escurecer
+    "gui/main_menu.png"
+    matrixcolor BrightnessMatrix(-0.5)
 
 ###############################################################################
 ##
