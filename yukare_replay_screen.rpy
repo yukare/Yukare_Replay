@@ -1,7 +1,5 @@
-image yukare_gallery_bg:
-    # Usa a imagem do menu e aplica uma matriz de brilho para escurecer
-    "Yukare_Replay/images/main_menu.png"
-    matrixcolor BrightnessMatrix(-0.5)
+init -1:
+    image yukare_gallery_bg = Solid("#121216")
 
 ###############################################################################
 ##

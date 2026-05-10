@@ -42,9 +42,10 @@ init -5 python:
 
     def get_yukare_scope():
         rv = {"pc_name": persistent.yukare_pc_name}
-        rv["mname"] = getattr(persistent, 'mname', getattr(store, 'mname', "Jenny"))
-        rv["bname"] = getattr(persistent, 'bname', getattr(store, 'bname', "Ivan"))
-        rv["sname"] = getattr(persistent, 'sname', getattr(store, 'sname', "Nadia"))
+        # Add game-specific variables if defined
+        if hasattr(store, 'yukare_game_scope_vars'):
+            for var_name, persistent_attr, default_val in store.yukare_game_scope_vars:
+                rv[var_name] = getattr(persistent, persistent_attr, getattr(store, persistent_attr, default_val))
         return rv
 
     def parse_yukare_scenes():
