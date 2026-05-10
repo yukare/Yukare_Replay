@@ -318,6 +318,7 @@ screen Yukare_Replay_Scene_Select(char_name):
 
         hbox:
             box_wrap True
+            xsize 1100  # Explicitly set width to force wrapping
             spacing 20
             
             textbutton "All" action SetVariable("yukare_selected_tags", []) style "yukare_gallery_button" text_size 20:
