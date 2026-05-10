@@ -309,22 +309,25 @@ screen Yukare_Replay_Scene_Select(char_name):
         text "[char_name] Scenes" style "yukare_gallery_title"
 
     # Filter selection
-    hbox:
+    vbox:
         align (0.5, 0.15)
         xsize 1100
-        spacing 20
-        box_wrap True
+        spacing 10
         
-        text "Filter:" style "yukare_gallery_label" size 24 yalign 0.5
+        text "Filter:" style "yukare_gallery_label" size 24
 
-        textbutton "All" action SetVariable("yukare_selected_tags", []) style "yukare_gallery_button" text_size 20 yalign 0.5:
-            if not yukare_selected_tags:
-                text_color "#0f0"
-
-        for t in yukare_all_tags:
-            textbutton t action ToggleSetMembership(yukare_selected_tags, t) style "yukare_gallery_button" text_size 20 yalign 0.5:
-                if t in yukare_selected_tags:
+        hbox:
+            box_wrap True
+            spacing 20
+            
+            textbutton "All" action SetVariable("yukare_selected_tags", []) style "yukare_gallery_button" text_size 20:
+                if not yukare_selected_tags:
                     text_color "#0f0"
+
+            for t in yukare_all_tags:
+                textbutton t action ToggleSetMembership(yukare_selected_tags, t) style "yukare_gallery_button" text_size 20:
+                    if t in yukare_selected_tags:
+                        text_color "#0f0"
 
     python:
         # If the virtual category "Favorites" is selected, filter All scenes by their presence in persistent.yukare_favorites
