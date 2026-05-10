@@ -35,12 +35,12 @@ style yukare_replay_end_button is yukare_gallery_button:
 style yukare_gallery_char_button:
     color "#FFF"
     hover_color "#0f0"
-    size 80
+    size 32
 
 
 style yukare_gallery_title:
     color "#FF86C2"
-    size 40
+    size 32
 
     outlines [(2, "#000", 0, 0)]
 
@@ -97,7 +97,7 @@ screen yukare_replay_controls():
 
             # Botão Sair do Replay
             button:
-                xsize 40 ysize 35
+                xsize 32 ysize 35
                 idle_background Transform(Solid("#f44336aa"), xsize=40, ysize=35)
                 hover_background Transform(Solid("#f44336"), xsize=40, ysize=35)
                 if persistent.yukare_random_mode_active:
@@ -118,6 +118,7 @@ screen yukare_replay_controls():
                 text "[my_tooltip]" size 12 color "#FF86C2"
 
 screen Yukare_Replay_Character_Select():
+    key 'ctrl_K_r' action Function(reload_yukare_data)
     tag menu
     add "yukare_gallery_bg"
     on "show" action [SetVariable("yukare_selected_tags", []), SetVariable("pc_name", persistent.yukare_pc_name)]
@@ -136,7 +137,7 @@ screen Yukare_Replay_Character_Select():
             hbox:
                 xalign 0.5
                 spacing 15
-                bar value u_all range t_all xsize 400 ysize 20 yalign 0.5
+                bar value u_all range t_all xsize 320 ysize 20 yalign 0.5
                 text "[p_all]% Complete ([u_all]/[t_all])" style "yukare_gallery_label" size 16 yalign 0.5
 
     # Toggle for Lock System
@@ -152,15 +153,16 @@ screen Yukare_Replay_Character_Select():
 
     viewport:
         align (0.5, 0.5)
-        xsize 1300
-        ysize 700
+        xsize 1200
+        ysize 500
         scrollbars "vertical"
         mousewheel True
         draggable True
 
         vpgrid:
             cols 3
-            spacing 60
+            spacing 30
+            bottom_margin 100
             xfill True
 
             for c in yukare_characters:
@@ -168,8 +170,8 @@ screen Yukare_Replay_Character_Select():
                 vbox:
                     spacing 10
                     imagebutton:
-                        idle Transform(char_thumb, zoom=0.2)
-                        hover Transform(char_thumb, zoom=0.21, matrixcolor=BrightnessMatrix(0.2) * ContrastMatrix(1.2))
+                        idle Transform(char_thumb, zoom=0.15)
+                        hover Transform(char_thumb, zoom=0.151, matrixcolor=BrightnessMatrix(0.2) * ContrastMatrix(1.2))
                         action ShowMenu("Yukare_Replay_Scene_Select", char_name=c)
                         hovered SetScreenVariable("hovered_char", c)
                         unhovered SetScreenVariable("hovered_char", None)
@@ -218,7 +220,7 @@ screen Yukare_Replay_Character_Select():
         if full_desc:
             frame:
                 align (0.5, 0.98)
-                xsize 1300
+                xsize 1200
                 padding (20, 20)
                 background Solid("#000000DD")
                 
@@ -248,8 +250,8 @@ screen Yukare_Replay_Random_Config():
         text "(Scenes must contain ALL selected tags)" style "yukare_gallery_label" size 18 xalign 0.5 italic True
 
         frame:
-            xsize 1000
-            ysize 400
+            xsize 900
+            ysize 320
             background Solid("#ffffff11")
             padding (20, 20)
             xalign 0.5
@@ -285,7 +287,7 @@ screen Yukare_Replay_Random_Config():
             xalign 0.5
             spacing 20
             textbutton "START RANDOM MODE" action ui.callsinnewcontext("yukare_random_start") style "yukare_gallery_button":
-                text_size 40
+                text_size 32
                 text_hover_color "#ff0"
             
             vbox:
@@ -301,6 +303,7 @@ screen Yukare_Replay_Random_Config():
     textbutton "Return" action ShowMenu("Yukare_Replay_Character_Select") style "yukare_gallery_return_button"
 
 screen Yukare_Replay_Scene_Select(char_name):
+    key 'ctrl_K_r' action Function(reload_yukare_data)
     tag menu
     add "yukare_gallery_bg"
 
@@ -315,7 +318,7 @@ screen Yukare_Replay_Scene_Select(char_name):
         text "Filter:" style "yukare_gallery_label" size 24 yalign 0.5
         
         viewport:
-            xsize 1000
+            xsize 900
             ysize 60
             mousewheel True
             draggable True
@@ -353,15 +356,16 @@ screen Yukare_Replay_Scene_Select(char_name):
 
     viewport:
         align (0.5, 0.6)
-        xsize 1500
-        ysize 700
+        xsize 1200
+        ysize 500
         scrollbars "vertical"
         mousewheel True
         draggable True
 
         vpgrid:
             cols 3
-            spacing 70
+            spacing 30
+            bottom_margin 100
             xfill True
 
             for s in current_scenes:
@@ -369,17 +373,17 @@ screen Yukare_Replay_Scene_Select(char_name):
                 $ display_thumb = s.scene_image if s.scene_image else (s.image if s.image else s.thumbnail)
                 vbox:
                     spacing 15
-                    xsize 400
+                    xsize 320
                     fixed:
-                        xsize 400
-                        ysize 250
+                        xsize 320
+                        ysize 200
                         imagebutton:
                             if is_unlocked:
-                                idle Transform(display_thumb, zoom=0.18)
-                                hover Transform(display_thumb, zoom=0.19, matrixcolor=BrightnessMatrix(0.25) * ContrastMatrix(1.25))
-                                action Replay(s.label, scope={"pc_name": persistent.yukare_pc_name}, locked=False)
+                                idle Transform(display_thumb, zoom=0.15)
+                                hover Transform(display_thumb, zoom=0.16, matrixcolor=BrightnessMatrix(0.25) * ContrastMatrix(1.25))
+                                action Replay(s.label, scope=get_yukare_scope(), locked=False)
                             else:
-                                idle Transform(display_thumb, zoom=0.18, matrixcolor=SaturationMatrix(0.0)*BrightnessMatrix(-0.5))
+                                idle Transform(display_thumb, zoom=0.15, matrixcolor=SaturationMatrix(0.0)*BrightnessMatrix(-0.5))
                                 action Notify("This scene is locked. Play the game to unlock it!")
                             align (0.5, 0.5)
 
@@ -390,7 +394,7 @@ screen Yukare_Replay_Scene_Select(char_name):
                                 action ToggleSetMembership(persistent.yukare_favorites, s.label)
                                 xalign 0.9
                                 yalign 0.1
-                                text_size 40
+                                text_size 32
                                 text_color ("#f00" if is_fav else "#fff")
                                 text_outlines [(2, "#000", 0, 0)]
 
