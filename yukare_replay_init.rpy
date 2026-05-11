@@ -142,54 +142,43 @@ init -5 python:
 
         # Build image map and descriptions
         for c in yukare_characters:
-            # Only set default image if not already defined
-            if c not in yukare_character_images:
-                img_path = f"Yukare_Replay/images/{c}.webp"
-                if not is_loadable(img_path):
-                    img_path = f"Yukare_Replay/images/{c}.png"
-                if not is_loadable(img_path):
-                    img_path = "Yukare_Replay/images/img.webp" # Fallback
-                yukare_character_images[c] = img_path
+            # Search for character image in Yukare_Replay/images/
+            img_path = f"Yukare_Replay/images/{c}.webp"
+            if not is_loadable(img_path):
+                img_path = f"Yukare_Replay/images/{c}.png"
+            if not is_loadable(img_path):
+                img_path = "Yukare_Replay/images/img.webp" # Fallback
             
-            # Only set default description if not already defined
-            if c not in yukare_character_descriptions:
-                yukare_character_descriptions[c] = f"View all scenes with {c}"
+            yukare_character_images[c] = img_path
+            yukare_character_descriptions[c] = f"View all scenes with {c}"
 
         # Special "All" character
         if all_scenes_list:
-            if "All" not in yukare_characters:
-                yukare_characters.insert(0, "All")
-            
+            yukare_characters.insert(0, "All")
             yukare_scenes["All"] = all_scenes_list
             
-            if "All" not in yukare_character_images:
-                all_img = "Yukare_Replay/images/All.webp"
-                if not is_loadable(all_img):
-                    all_img = "Yukare_Replay/images/All.png"
-                if not is_loadable(all_img):
-                    all_img = Transform(Solid("#34495e"), xsize=1280, ysize=720)
-                yukare_character_images["All"] = all_img
+            all_img = "Yukare_Replay/images/All.webp"
+            if not is_loadable(all_img):
+                all_img = "Yukare_Replay/images/All.png"
+            if not is_loadable(all_img):
+                all_img = Transform(Solid("#34495e"), xsize=1280, ysize=720)
             
-            if "All" not in yukare_character_descriptions:
-                yukare_character_descriptions["All"] = "All available scenes"
+            yukare_character_images["All"] = all_img
+            yukare_character_descriptions["All"] = "All available scenes"
             
             # Add "Favorites" option
-            if "Favorites" not in yukare_characters:
-                yukare_characters.insert(1, "Favorites")
-            
+            yukare_characters.insert(1, "Favorites")
             yukare_scenes["Favorites"] = []
             
             # Check for custom "Favorites" image
-            if "Favorites" not in yukare_character_images:
-                fav_img = "Yukare_Replay/images/Favorites.webp"
-                if not is_loadable(fav_img):
-                    fav_img = "Yukare_Replay/images/Favorites.png"
-                if not is_loadable(fav_img):
-                    fav_img = Transform(Solid("#9b59b6"), xsize=1280, ysize=720)
-                yukare_character_images["Favorites"] = fav_img
+            fav_img = "Yukare_Replay/images/Favorites.webp"
+            if not is_loadable(fav_img):
+                fav_img = "Yukare_Replay/images/Favorites.png"
+            if not is_loadable(fav_img):
+                fav_img = Transform(Solid("#9b59b6"), xsize=1280, ysize=720)
                 
-            if "Favorites" not in yukare_character_descriptions:
-                yukare_character_descriptions["Favorites"] = "Your favorite scenes"
+            yukare_character_images["Favorites"] = fav_img
+            yukare_character_descriptions["Favorites"] = "Your favorite scenes"
 
         yukare_all_tags = sorted(list(yukare_all_tags))
 
