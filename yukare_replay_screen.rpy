@@ -167,8 +167,8 @@ screen Yukare_Replay_Character_Select():
                 vbox:
                     spacing 10
                     imagebutton:
-                        idle Transform(char_thumb, zoom=0.15)
-                        hover Transform(char_thumb, zoom=0.151, matrixcolor=BrightnessMatrix(0.2) * ContrastMatrix(1.2))
+                        idle Transform(char_thumb, xsize=300, ysize=170, fit="cover")
+                        hover Transform(char_thumb, xsize=300, ysize=170, fit="cover", matrixcolor=BrightnessMatrix(0.2) * ContrastMatrix(1.2))
                         action ShowMenu("Yukare_Replay_Scene_Select", char_name=c)
                         hovered SetScreenVariable("hovered_char", c)
                         unhovered SetScreenVariable("hovered_char", None)
@@ -374,11 +374,11 @@ screen Yukare_Replay_Scene_Select(char_name):
                         ysize 200
                         imagebutton:
                             if is_unlocked:
-                                idle Transform(display_thumb, zoom=0.15)
-                                hover Transform(display_thumb, zoom=0.16, matrixcolor=BrightnessMatrix(0.25) * ContrastMatrix(1.25))
+                                idle Transform(display_thumb, xsize=300, ysize=170, fit="cover")
+                                hover Transform(display_thumb, xsize=300, ysize=170, fit="cover", matrixcolor=BrightnessMatrix(0.25) * ContrastMatrix(1.25))
                                 action Replay(s.label, scope=get_yukare_scope(), locked=False)
                             else:
-                                idle Transform(display_thumb, zoom=0.15, matrixcolor=SaturationMatrix(0.0)*BrightnessMatrix(-0.5))
+                                idle Transform(display_thumb, xsize=300, ysize=170, fit="cover", matrixcolor=SaturationMatrix(0.0)*BrightnessMatrix(-0.5))
                                 action Notify("This scene is locked. Play the game to unlock it!")
                             align (0.5, 0.5)
 

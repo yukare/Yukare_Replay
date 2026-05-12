@@ -1,6 +1,7 @@
 init -5 python:
     import re
     import os
+    import io
 
     class YukareScene(object):
         def __init__(self, label, character, title, tags, image=None, scene_image=None, origin=None):
@@ -69,7 +70,7 @@ init -5 python:
                 continue
                 
             file_path = os.path.join(replay_dir, filename)
-            with open(file_path, "r", encoding="utf-8") as f:
+            with io.open(file_path, "r", encoding="utf-8") as f:
                 content = f.read()
                 
             # Regex to find label and tags
@@ -143,14 +144,14 @@ init -5 python:
         # Build image map and descriptions
         for c in yukare_characters:
             # Search for character image in Yukare_Replay/images/
-            img_path = f"Yukare_Replay/images/{c}.webp"
+            img_path = "Yukare_Replay/images/{}.webp".format(c)
             if not is_loadable(img_path):
-                img_path = f"Yukare_Replay/images/{c}.png"
+                img_path = "Yukare_Replay/images/{}.png".format(c)
             if not is_loadable(img_path):
                 img_path = "Yukare_Replay/images/img.webp" # Fallback
             
             yukare_character_images[c] = img_path
-            yukare_character_descriptions[c] = f"View all scenes with {c}"
+            yukare_character_descriptions[c] = "View all scenes with {}".format(c)
 
         # Special "All" character
         if all_scenes_list:
