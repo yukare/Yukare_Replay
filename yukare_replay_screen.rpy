@@ -365,7 +365,7 @@ screen Yukare_Replay_Scene_Select(char_name):
 
             for s in current_scenes:
                 $ is_unlocked = s.is_unlocked
-                $ display_thumb = s.scene_image if s.scene_image else (s.image if s.image else s.thumbnail)
+                $ display_thumb = s.scene_image if s.scene_image else s.thumbnail
                 vbox:
                     spacing 15
                     xsize 320
