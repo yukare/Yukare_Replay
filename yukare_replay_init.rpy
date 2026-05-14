@@ -81,7 +81,7 @@ init -5 python:
             #     ##@scene_image image_name
             #     ##@tags tag1, tag2
             
-            pattern = r'label\s+(replay_[a-zA-Z0-9_]+):'
+            pattern = r'label\s+(replay_[a-zA-Z0-9_]+)(\(.*\))?\s*:'
             labels = re.finditer(pattern, content)
             
             for match in labels:
