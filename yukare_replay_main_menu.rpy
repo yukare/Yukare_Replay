@@ -1,14 +1,16 @@
 # Injeção via config.overlay_screens
 init 999 python:
     # Adiciona a nossa tela como um overlay, 
-    # que será exibido por cima do menu principal.
+    # que será exibido por cima do menu principal e secundário.
     if "yukare_replay_main_menu_hook" not in config.overlay_screens:
         config.overlay_screens.append("yukare_replay_main_menu_hook")
 
 screen yukare_replay_main_menu_hook():
     zorder 10000
 
-    if main_menu: # Só exibe se for o menu principal mesmo
+    # Exibe no menu principal (main_menu) ou no menu de jogo (game_menu)
+    # No Ren'Py, o menu de jogo é quando não estamos no main_menu mas estamos em um menu (tag menu)
+    if main_menu or renpy.get_screen("navigation"):
         frame:
             xalign 0.98
             yalign 0.05
