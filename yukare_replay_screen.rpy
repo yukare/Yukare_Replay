@@ -158,14 +158,15 @@ screen Yukare_Replay_Character_Select():
 
         vpgrid:
             cols 3
-            spacing 30
+            xspacing 30
+            yspacing 60
             bottom_margin 100
             xfill True
 
             for c in yukare_characters:
                 $ char_thumb = yukare_character_images.get(c, "Yukare_Replay/images/img.webp")
                 vbox:
-                    spacing 10
+                    spacing 15
                     imagebutton:
                         idle Transform(char_thumb, xsize=300, ysize=170, fit="cover")
                         hover Transform(char_thumb, xsize=300, ysize=170, fit="cover", matrixcolor=BrightnessMatrix(0.2) * ContrastMatrix(1.2))
@@ -175,7 +176,7 @@ screen Yukare_Replay_Character_Select():
                         align (0.5, 0.5)
 
                     vbox:
-                        spacing 0 # Minimum spacing
+                        spacing 5
                         xalign 0.5
                         textbutton c:
                             action ShowMenu("Yukare_Replay_Scene_Select", char_name=c)
@@ -208,7 +209,6 @@ screen Yukare_Replay_Character_Select():
                                 xalign 0.5
                                 text_align 0.5
                                 xsize 380
-                                ysize 100
                                 layout "subtitle"
 
     # Painel de descrição completa (aparece ao passar o mouse)
@@ -385,7 +385,7 @@ screen Yukare_Replay_Scene_Select(char_name):
                         if is_unlocked:
                             # Favorite Toggle Button (Heart)
                             $ is_fav = s.label in persistent.yukare_favorites
-                            textbutton ("♥" if is_fav else "♡"):
+                            textbutton ("♥" if is_fav else "♡") text_font "fonts/DejaVuSansCondensed-Bold.ttf":
                                 action ToggleSetMembership(persistent.yukare_favorites, s.label)
                                 xalign 0.9
                                 yalign 0.1
