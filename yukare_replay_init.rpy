@@ -1,4 +1,13 @@
 init -5 python:
+    # Custom callback to handle replay variables
+    def yukare_replay_callback(label=None):
+        # Force pc_name to match persistent
+        store.pc_name = persistent.yukare_pc_name
+
+    config.replay_scope = {"pc_name": persistent.yukare_pc_name}
+    config.after_replay_callback = yukare_replay_callback
+
+init -100 python:
     import re
     import os
     import io
@@ -26,14 +35,8 @@ init -5 python:
                 
             self.tag_list = [t.strip() for t in tags.split(",")] if tags else []
 
-    # Custom callback to handle replay variables
-    def yukare_replay_callback(label=None):
-        # Force pc_name to match persistent
-        store.pc_name = persistent.yukare_pc_name
-
-    config.replay_scope = {"pc_name": persistent.yukare_pc_name}
-    config.after_replay_callback = yukare_replay_callback
-    config.overlay_screens.append("yukare_replay_controls")
+    if "yukare_replay_controls" not in config.overlay_screens:
+        config.overlay_screens.append("yukare_replay_controls")
 
     yukare_characters = []
     yukare_scenes = {}
