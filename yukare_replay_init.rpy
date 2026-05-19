@@ -8,7 +8,7 @@ init -5 python:
     config.after_replay_callback = yukare_replay_callback
 
 init -100 python:
-    import re
+    import re as real_re
     import os
     import io
 
@@ -85,7 +85,7 @@ init -100 python:
             #     ##@tags tag1, tag2
             
             pattern = r'label\s+(replay_[a-zA-Z0-9_]+)(\(.*\))?\s*:'
-            labels = re.finditer(pattern, content)
+            labels = real_re.finditer(pattern, content)
             
             for match in labels:
                 label_name = match.group(1)
@@ -98,11 +98,11 @@ init -100 python:
                 else:
                     label_block = content[start_pos:end_pos]
                 
-                person_match = re.search(r'##@person\s+(.*)', label_block)
-                title_match = re.search(r'##@title\s+(.*)', label_block)
-                image_match = re.search(r'##@scene_image\s+(.*)', label_block)
-                tags_match = re.search(r'##@tags\s+(.*)', label_block)
-                origin_match = re.search(r'##@origim\s+(.*)', label_block)
+                person_match = real_re.search(r'##@person\s+(.*)', label_block)
+                title_match = real_re.search(r'##@title\s+(.*)', label_block)
+                image_match = real_re.search(r'##@scene_image\s+(.*)', label_block)
+                tags_match = real_re.search(r'##@tags\s+(.*)', label_block)
+                origin_match = real_re.search(r'##@origim\s+(.*)', label_block)
                 
                 char_raw = person_match.group(1).strip() if person_match else "Unknown"
                 scene_title = title_match.group(1).strip() if title_match else label_name
@@ -118,7 +118,7 @@ init -100 python:
                 # Find a thumbnail (first image in the label)
                 scene_image_path = None
                 if not specific_scene_image:
-                    img_match = re.search(r'scene\s+([a-zA-Z0-9_]+)', label_block)
+                    img_match = real_re.search(r'scene\s+([a-zA-Z0-9_]+)', label_block)
                     if img_match:
                         scene_image_path = img_match.group(1)
                 
@@ -169,8 +169,11 @@ init -100 python:
             if not is_loadable(img_path):
                 img_path = "Yukare_Replay/images/img.webp" # Fallback
             
-            yukare_character_images[c] = img_path
-            yukare_character_descriptions[c] = "View all scenes with {}".format(c)
+            if c not in yukare_character_images:
+                yukare_character_images[c] = img_path
+            
+            if c not in yukare_character_descriptions:
+                yukare_character_descriptions[c] = "View all scenes with {}".format(c)
 
         # Special "All" character
         if all_scenes_list:
@@ -202,6 +205,9 @@ init -100 python:
 
         yukare_all_tags = sorted(list(yukare_all_tags))
 
+    parse_yukare_scenes()
+
+init 20 python:
     parse_yukare_scenes()
 
     def reload_yukare_data():
