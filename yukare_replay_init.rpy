@@ -137,6 +137,22 @@ init -100 python:
 
         # Sort characters alphabetically
         yukare_characters.sort()
+
+        # Group "Others" characters
+        others_list = getattr(store, "yukare_others_characters", [])
+        if others_list:
+            real_chars = [c for c in yukare_characters if c not in others_list]
+            others_scenes = []
+            for c in others_list:
+                if c in yukare_scenes:
+                    for s in yukare_scenes[c]:
+                        if s not in others_scenes:
+                            others_scenes.append(s)
+            
+            yukare_characters = real_chars
+            if others_scenes:
+                yukare_characters.append("Others")
+                yukare_scenes["Others"] = others_scenes
         
         def is_loadable(img):
             try:
