@@ -385,7 +385,7 @@ screen Yukare_Replay_Scene_Select(char_name):
                         if is_unlocked:
                             # Favorite Toggle Button (Heart)
                             $ is_fav = s.label in persistent.yukare_favorites
-                            textbutton ("♥" if is_fav else "♡") text_font "fonts/DejaVuSansCondensed-Bold.ttf":
+                            textbutton ("♥" if is_fav else "♡") text_font "DejaVuSans.ttf":
                                 action ToggleSetMembership(persistent.yukare_favorites, s.label)
                                 xalign 0.9
                                 yalign 0.1
