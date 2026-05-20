@@ -1,63 +1,90 @@
-# Yukare_Replay
-Scenes gallery for renpy games.
+# Yukare Replay System - Scripts
 
-  Alterações Realizadas:
+Este repositório contém a lógica modular do sistema **Yukare Replay**. Estes scripts foram projetados para serem agnósticos ao jogo, permitindo sua fácil portabilidade para outros projetos Ren'Py.
 
-- game/Yukare_Replay/scripts/yukare_replay_init.rpy: Atualizei o script de inicialização para que, ao encontrar o marcador ##@person (ou ##@girl), ele divida os nomes fornecidos por
-     vírgula. A cena agora é registrada na galeria de cada uma das personagens mencionadas.
-- Compatibilidade: Se uma cena possuir o marcador ##@char_image, a imagem será aplicada a todas as personagens listadas naquela cena (caso elas ainda não possuam uma imagem definida).
+---
 
-  Exemplo de Uso:
-  Agora você pode definir cenas com múltiplas pessoas no arquivo game/Yukare_Replay/scenes.rpy da seguinte forma:
+## 1. Galeria de Replays (`yukare_replay_init.rpy` e `yukare_replay_screen.rpy`)
 
-   1 label replay_exemplo_multiplo:
-   2     ##@person Bianca, Summer, Eva
-   3     ##@title Cena em Grupo
-   4     # ... código da cena ...
-   5     return
-  Esta cena aparecerá automaticamente nas galerias da Bianca, da Summer e da Eva.
+O sistema escaneia automaticamente o diretório `game/Yukare_Replay/` em busca de labels que comecem com `replay_`.
 
-✦ Adicionei suporte à nova marcação ##@scene_image.
+### Como registrar uma cena:
+Adicione metadados em comentários logo após a definição da label:
 
-  O que mudou:
+```renpy
+label replay_exemplo_cena:
+    ##@person Summer, Lynda        # Nomes das personagens (separados por vírgula)
+    ##@title Titulo da Cena        # Nome exibido na galeria
+    ##@scene_image thumb_cena      # Imagem da miniatura (opcional)
+    ##@tags Oral, Hardcore         # Tags para filtragem (opcional)
+    ##@origim label_original       # Label original do jogo para checagem de progresso (opcional)
+    
+    # ... código da cena ...
+    return
+```
 
-- Prioridade de Imagem: Na galeria de cenas, o sistema agora segue esta ordem de prioridade para exibir a miniatura:
-       1. ##@scene_image (se definida)
-       2. ##@image (se definida e a anterior não existir)
-       3. Miniatura padrão do mod (se nenhuma das anteriores estiver definida)
-- Flexibilidade: Isso permite que você use @image para uma finalidade e @scene_image especificamente para o que deve aparecer na galeria, se desejar diferenciá-las.
+### Ordem de Prioridade para Miniaturas:
+1. Marcador `##@scene_image`.
+2. Primeira instrução `scene` encontrada no bloco da label.
+3. Imagem padrão configurada em `yukare_replay_init.rpy`.
 
-  Exemplo de Uso:
+---
 
-   1 label replay_exemplo:
-   2     ##@person Bianca
-   3     ##@title Encontro no Parque
-   4     ##@scene_image Yukare_Replay/images/thumb_parque.webp
-   5     # ... resto da cena ...
-   6     return
+## 2. Sistema de Janela de Dicas (`yukare_tips.rpy`)
 
-✦ Como não posso gerar um arquivo de imagem binário (como .png ou .jpg) diretamente, criei uma definição de imagem procedural dentro do Ren'Py. Isso permite que você tenha um fundo
-  elegante e consistente sem depender de arquivos externos pesados.
+Permite exibir uma janela flutuante com objetivos ou dicas que o jogador pode mover ou fechar.
 
-  O que eu fiz:
+### Uso via Python:
+```python
+# Exibir uma dica
+python:
+    show_tip("Você precisa encontrar a chave no corredor.")
 
-   1. Definição de Imagem: Criei uma imagem chamada yukare_gallery_bg no arquivo game/Yukare_Replay/scripts/yukare_replay_screen.rpy.
-   2. Estética: Atualmente, ela está definida como um fundo cinza muito escuro (#121216) com uma leve transparência, o que dá um ar moderno e faz com que os botões e títulos se destaquem
-      melhor.
-   3. Atualização das Telas: Configurei as telas de Seleção de Personagem e Seleção de Cena para usar esse novo fundo.
+# Esconder a dica
+python:
+    hide_tip()
+```
 
-  Como personalizar:
-  Se você quiser usar uma imagem específica no futuro, basta alterar a definição no topo do arquivo game/Yukare_Replay/scripts/yukare_replay_screen.rpy:
+---
 
-    1 image yukare_gallery_bg:
-    2     # Para usar uma imagem de arquivo:
-    3     "Yukare_Replay/images/SeuFundoNovo.webp"
-    4
-    5     # Ou mantenha o efeito de sobreposição escura sobre uma imagem:
-    6     # contains:
-    7     #     "gui/main_menu.png" # Exemplo: usa o fundo do menu principal
-    8     # contains:
-    9     #     Solid("#000")
-   10     #     alpha 0.6 # Escurece a imagem de fundo em 60%
+## 3. Tags de Menu Dinâmicas (`yukare_menu_tags.rpy`)
 
-  Dessa forma, o fundo agora é controlado por código, facilitando qualquer ajuste futuro de cor ou imagem!
+Este script intercepta o comportamento padrão do `screen choice` para permitir a estilização de opções de menu via tags de texto.
+
+### Tags Suportadas:
+- `[green]`: Torna o texto da opção verde (útil para escolhas corretas).
+- `[red]`: Torna o texto da opção vermelho (útil para escolhas perigosas).
+- `[last]`: Adiciona uma seta `»` antes do texto (útil para indicar a última escolha feita).
+
+**Exemplo:**
+```renpy
+menu:
+    "Falar a verdade [green]":
+        pass
+    "Mentir descaradamente [red]":
+        pass
+```
+
+---
+
+## 4. Modo Galeria Aleatória (`yukare_random_gallery.rpy`)
+
+Implementa um sistema que escolhe e reproduz cenas aleatórias da galeria.
+
+- **Fila de Reprodução**: O sistema evita repetir cenas até que todas tenham sido exibidas.
+- **Favoritos**: Pode ser configurado para sortear apenas cenas marcadas como favoritas pelo jogador.
+
+---
+
+## 5. Variáveis de Infraestrutura (`yukare_variables.rpy`)
+
+Contém as definições de persistência do mod.
+- `persistent.yukare_lock_enabled`: Se `True`, trava cenas não vistas no jogo original.
+- `persistent.yukare_pc_name`: Nome padrão do jogador em replays.
+- `persistent.yukare_favorites`: Lista de cenas favoritadas.
+
+---
+
+## Observações Técnicas
+- **Fundo da Galeria**: A imagem `yukare_gallery_bg` é definida de forma procedural no topo de `yukare_replay_screen.rpy` para evitar dependência de arquivos externos.
+- **Isolamento**: Estes scripts não devem ser alterados para lógica específica de um jogo. Para isso, utilize o arquivo de ponte na raiz da pasta `Yukare_Replay`.
