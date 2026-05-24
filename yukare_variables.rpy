@@ -11,3 +11,4 @@ default persistent.yukare_highlight_char = None # Chosen character path for walk
 # Store variables for gallery filtering and state
 default yukare_selected_tags = []
 default yukare_replay_loop = False
+default yukare_guide_route = None
