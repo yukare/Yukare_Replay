@@ -12,6 +12,8 @@ init -100 python:
     import os
     import io
 
+    yukare_thumbnail_cache = {}
+
     def yukare_validate_thumbnail(img):
         if not img:
             return "Yukare_Replay/scripts/NoImageSet.png"
@@ -24,6 +26,14 @@ init -100 python:
         if not is_str:
             return img
 
+        if img in yukare_thumbnail_cache:
+            return yukare_thumbnail_cache[img]
+
+        res = _yukare_validate_thumbnail_uncached(img)
+        yukare_thumbnail_cache[img] = res
+        return res
+
+    def _yukare_validate_thumbnail_uncached(img):
         try:
             if renpy.has_image(img):
                 return img
