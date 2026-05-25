@@ -74,18 +74,21 @@ init -100 python:
             self.scene_image = scene_image
             self.origin = origin # The original game label to check for "seen" status
             
-            # Check if the player has seen the original label in the game
-            # Split by label but keep the label name
-            self.is_unlocked = False
-            if persistent.yukare_lock_enabled:
-                if self.origin and renpy.seen_label(self.origin):
-                    self.is_unlocked = True
-                elif renpy.seen_label(self.label):
-                    self.is_unlocked = True
-            else:
-                self.is_unlocked = True
-                
+            # Pre-resolve the display thumbnail path at initialization time
+            img_to_validate = scene_image if scene_image else image
+            self.display_thumb = yukare_validate_thumbnail(img_to_validate)
+            
             self.tag_list = [t.strip() for t in tags.split(",")] if tags else []
+
+        @property
+        def is_unlocked(self):
+            if not persistent.yukare_lock_enabled:
+                return True
+            if self.origin and renpy.seen_label(self.origin):
+                return True
+            if renpy.seen_label(self.label):
+                return True
+            return False
 
     if "yukare_replay_controls" not in config.overlay_screens:
         config.overlay_screens.append("yukare_replay_controls")

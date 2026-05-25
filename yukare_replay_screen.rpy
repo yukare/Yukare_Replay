@@ -164,7 +164,7 @@ screen Yukare_Replay_Character_Select():
             xfill True
 
             for c in yukare_characters:
-                $ char_thumb = yukare_validate_thumbnail(yukare_character_images.get(c, "Yukare_Replay/images/img.webp"))
+                $ char_thumb = yukare_character_images.get(c, "Yukare_Replay/scripts/NoImageSet.png")
                 vbox:
                     spacing 15
                     imagebutton:
@@ -373,7 +373,7 @@ screen Yukare_Replay_Scene_Select(char_name):
 
                 for s in current_scenes:
                     $ is_unlocked = s.is_unlocked
-                    $ display_thumb = yukare_validate_thumbnail(s.scene_image if s.scene_image else s.thumbnail)
+                    $ display_thumb = s.display_thumb
                     vbox:
                         spacing 15
                         xsize 320
