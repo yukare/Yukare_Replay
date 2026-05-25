@@ -34,6 +34,14 @@ init -100 python:
         return res
 
     def _yukare_validate_thumbnail_uncached(img):
+        # Try custom generated thumbnails directory first
+        try:
+            thumb_path = "Yukare_Replay/thumbnails/" + img.lower() + ".webp"
+            if renpy.loadable(thumb_path):
+                return thumb_path
+        except:
+            pass
+
         try:
             if renpy.has_image(img):
                 return img
