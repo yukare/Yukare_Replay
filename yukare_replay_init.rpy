@@ -12,6 +12,8 @@ init -100 python:
     import os
     import io
 
+    yukare_thumbnail_cache = {}
+
     def yukare_validate_thumbnail(img):
         if not img:
             return "Yukare_Replay/scripts/NoImageSet.png"
@@ -24,15 +26,22 @@ init -100 python:
         if not is_str:
             return img
 
+        if img in yukare_thumbnail_cache:
+            return yukare_thumbnail_cache[img]
+
+        def cache_and_return(val):
+            yukare_thumbnail_cache[img] = val
+            return val
+
         try:
             if renpy.has_image(img):
-                return img
+                return cache_and_return(img)
         except:
             pass
 
         try:
             if renpy.loadable(img):
-                return img
+                return cache_and_return(img)
         except:
             pass
 
@@ -41,18 +50,18 @@ init -100 python:
             for folder in ["images/", "Yukare_Replay/images/"]:
                 path_with_folder = folder + img
                 if renpy.loadable(path_with_folder):
-                    return path_with_folder
+                    return cache_and_return(path_with_folder)
                 for ext in [".webp", ".png", ".jpg", ".jpeg"]:
                     if renpy.loadable(path_with_folder + ext):
-                        return path_with_folder + ext
+                        return cache_and_return(path_with_folder + ext)
             
             for ext in [".webp", ".png", ".jpg", ".jpeg"]:
                 if renpy.loadable(img + ext):
-                    return img + ext
+                    return cache_and_return(img + ext)
         except:
             pass
 
-        return "Yukare_Replay/scripts/NoImageSet.png"
+        return cache_and_return("Yukare_Replay/scripts/NoImageSet.png")
 
     class YukareScene(object):
         def __init__(self, label, character, title, tags, image=None, scene_image=None, origin=None):
