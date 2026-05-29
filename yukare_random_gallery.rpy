@@ -12,6 +12,7 @@ init python:
     def stop_yukare_random_mode():
         """Stops the random mode and ends any ongoing replay."""
         persistent.yukare_random_mode_active = False
+        store.yukare_was_skipping = False
         if getattr(store, '_in_replay', False):
             renpy.end_replay()
 
@@ -96,6 +97,7 @@ label yukare_random_loop:
                 break
 
     if not persistent.yukare_random_mode_active:
+        $ store.yukare_was_skipping = False
         return
 
     # Continua se não houver interrupção detectada
@@ -103,4 +105,5 @@ label yukare_random_loop:
 
 label yukare_random_stop:
     $ persistent.yukare_random_mode_active = False
+    $ store.yukare_was_skipping = False
     return
