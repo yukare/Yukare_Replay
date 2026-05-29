@@ -151,7 +151,7 @@ screen Yukare_Replay_Character_Select():
     viewport:
         align (0.5, 0.5)
         xsize 1200
-        ysize 500
+        ysize 800
         scrollbars "vertical"
         mousewheel True
         draggable True
@@ -164,7 +164,7 @@ screen Yukare_Replay_Character_Select():
             xfill True
 
             for c in yukare_characters:
-                $ char_thumb = yukare_validate_thumbnail(yukare_character_images.get(c, "Yukare_Replay/images/img.webp"))
+                $ char_thumb = yukare_character_images.get(c, "Yukare_Replay/scripts/NoImageSet.png")
                 vbox:
                     spacing 15
                     imagebutton:
@@ -304,32 +304,6 @@ screen Yukare_Replay_Scene_Select(char_name):
     tag menu
     add "yukare_gallery_bg"
 
-    vbox:
-        align (0.5, 0.05)
-        text "[char_name] Scenes" style "yukare_gallery_title"
-
-    # Filter selection
-    vbox:
-        align (0.5, 0.15)
-        xsize 1100
-        spacing 10
-        
-        text "Filter:" style "yukare_gallery_label" size 24
-
-        hbox:
-            box_wrap True
-            xsize 1100  # Explicitly set width to force wrapping
-            spacing 20
-            
-            textbutton "All" action SetVariable("yukare_selected_tags", []) style "yukare_gallery_button" text_size 20:
-                if not yukare_selected_tags:
-                    text_color "#0f0"
-
-            for t in yukare_all_tags:
-                textbutton t action ToggleSetMembership(yukare_selected_tags, t) style "yukare_gallery_button" text_size 20:
-                    if t in yukare_selected_tags:
-                        text_color "#0f0"
-
     python:
         # If the virtual category "Favorites" is selected, filter All scenes by their presence in persistent.yukare_favorites
         if char_name == "Favorites":
@@ -349,61 +323,95 @@ screen Yukare_Replay_Scene_Select(char_name):
                     temp_scenes.append(scene_obj)
             current_scenes = temp_scenes
 
-    viewport:
-        align (0.5, 0.6)
+    vbox:
+        xalign 0.5
+        ypos 25
+        spacing 15
         xsize 1200
-        ysize 500
-        scrollbars "vertical"
-        mousewheel True
-        draggable True
 
-        vpgrid:
-            cols 3
-            spacing 30
-            bottom_margin 100
-            xfill True
+        # Title
+        text "[char_name] Scenes" style "yukare_gallery_title" xalign 0.5
 
-            for s in current_scenes:
-                $ is_unlocked = s.is_unlocked
-                $ display_thumb = yukare_validate_thumbnail(s.scene_image if s.scene_image else s.thumbnail)
-                vbox:
-                    spacing 15
-                    xsize 320
-                    fixed:
+        # Filter selection
+        vbox:
+            xalign 0.5
+            xsize 1100
+            spacing 10
+            
+            text "Filter:" style "yukare_gallery_label" size 24
+
+            hbox:
+                box_wrap True
+                xsize 1100  # Explicitly set width to force wrapping
+                spacing 20
+                
+                textbutton "All" action SetVariable("yukare_selected_tags", []) style "yukare_gallery_button" text_size 20:
+                    if not yukare_selected_tags:
+                        text_color "#0f0"
+
+                for t in yukare_all_tags:
+                    textbutton t action ToggleSetMembership(yukare_selected_tags, t) style "yukare_gallery_button" text_size 20:
+                        if t in yukare_selected_tags:
+                            text_color "#0f0"
+
+        null height 15
+
+        # Viewport
+        viewport:
+            xalign 0.5
+            xsize 1200
+            ysize 800
+            scrollbars "vertical"
+            mousewheel True
+            draggable True
+
+            vpgrid:
+                cols 3
+                spacing 30
+                bottom_margin 50
+                xfill True
+
+                for s in current_scenes:
+                    $ is_unlocked = s.is_unlocked
+                    $ display_thumb = s.display_thumb
+                    vbox:
+                        spacing 15
                         xsize 320
-                        ysize 200
-                        imagebutton:
+                        fixed:
+                            xsize 320
+                            ysize 200
+                            imagebutton:
+                                if is_unlocked:
+                                    idle Transform(display_thumb, xsize=300, ysize=170, fit="cover")
+                                    hover Transform(display_thumb, xsize=300, ysize=170, fit="cover", matrixcolor=BrightnessMatrix(0.25) * ContrastMatrix(1.25))
+                                    action Replay(s.label, scope=get_yukare_scope(), locked=False)
+                                else:
+                                    idle Transform(display_thumb, xsize=300, ysize=170, fit="cover", matrixcolor=SaturationMatrix(0.0)*BrightnessMatrix(-0.5))
+                                    action Notify("This scene is locked. Play the game to unlock it!")
+                                align (0.5, 0.5)
+
                             if is_unlocked:
-                                idle Transform(display_thumb, xsize=300, ysize=170, fit="cover")
-                                hover Transform(display_thumb, xsize=300, ysize=170, fit="cover", matrixcolor=BrightnessMatrix(0.25) * ContrastMatrix(1.25))
-                                action Replay(s.label, scope=get_yukare_scope(), locked=False)
-                            else:
-                                idle Transform(display_thumb, xsize=300, ysize=170, fit="cover", matrixcolor=SaturationMatrix(0.0)*BrightnessMatrix(-0.5))
-                                action Notify("This scene is locked. Play the game to unlock it!")
-                            align (0.5, 0.5)
+                                # Favorite Toggle Button (Heart)
+                                $ is_fav = s.label in persistent.yukare_favorites
+                                textbutton ("♥" if is_fav else "♡") text_font "DejaVuSans.ttf":
+                                    action ToggleSetMembership(persistent.yukare_favorites, s.label)
+                                    xalign 0.9
+                                    yalign 0.1
+                                    text_size 32
+                                    text_color ("#f00" if is_fav else "#fff")
+                                    text_outlines [(2, "#000", 0, 0)]
 
-                        if is_unlocked:
-                            # Favorite Toggle Button (Heart)
-                            $ is_fav = s.label in persistent.yukare_favorites
-                            textbutton ("♥" if is_fav else "♡") text_font "DejaVuSans.ttf":
-                                action ToggleSetMembership(persistent.yukare_favorites, s.label)
-                                xalign 0.9
-                                yalign 0.1
-                                text_size 32
-                                text_color ("#f00" if is_fav else "#fff")
-                                text_outlines [(2, "#000", 0, 0)]
+                        if s.title:
+                            text (s.title if is_unlocked else "???"):
+                                style "yukare_gallery_label"
+                                xalign 0.5
+                                text_align 0.5
 
-                    if s.title:
-                        text (s.title if is_unlocked else "???"):
-                            style "yukare_gallery_label"
-                            xalign 0.5
-                            text_align 0.5
-
-                    if s.tags:
-                        text "([s.tags])":
-                            style "yukare_gallery_label"
-                            size 16
-                            xalign 0.5
-                            text_align 0.5
+                        if s.tags:
+                            text "([s.tags])":
+                                style "yukare_gallery_label"
+                                size 16
+                                xalign 0.5
+                                text_align 0.5
 
     textbutton "Return" action ShowMenu("Yukare_Replay_Character_Select") style "yukare_gallery_return_button"

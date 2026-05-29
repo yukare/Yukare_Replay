@@ -29,19 +29,28 @@ init -100 python:
         if img in yukare_thumbnail_cache:
             return yukare_thumbnail_cache[img]
 
-        def cache_and_return(val):
-            yukare_thumbnail_cache[img] = val
-            return val
+        res = _yukare_validate_thumbnail_uncached(img)
+        yukare_thumbnail_cache[img] = res
+        return res
+
+    def _yukare_validate_thumbnail_uncached(img):
+        # Try custom generated thumbnails directory first
+        try:
+            thumb_path = "Yukare_Replay/thumbnails/" + img.lower() + ".webp"
+            if renpy.loadable(thumb_path):
+                return thumb_path
+        except:
+            pass
 
         try:
             if renpy.has_image(img):
-                return cache_and_return(img)
+                return img
         except:
             pass
 
         try:
             if renpy.loadable(img):
-                return cache_and_return(img)
+                return img
         except:
             pass
 
@@ -50,18 +59,18 @@ init -100 python:
             for folder in ["images/", "Yukare_Replay/images/"]:
                 path_with_folder = folder + img
                 if renpy.loadable(path_with_folder):
-                    return cache_and_return(path_with_folder)
+                    return path_with_folder
                 for ext in [".webp", ".png", ".jpg", ".jpeg"]:
                     if renpy.loadable(path_with_folder + ext):
-                        return cache_and_return(path_with_folder + ext)
+                        return path_with_folder + ext
             
             for ext in [".webp", ".png", ".jpg", ".jpeg"]:
                 if renpy.loadable(img + ext):
-                    return cache_and_return(img + ext)
+                    return img + ext
         except:
             pass
 
-        return cache_and_return("Yukare_Replay/scripts/NoImageSet.png")
+        return "Yukare_Replay/scripts/NoImageSet.png"
 
     class YukareScene(object):
         def __init__(self, label, character, title, tags, image=None, scene_image=None, origin=None):
@@ -73,18 +82,21 @@ init -100 python:
             self.scene_image = scene_image
             self.origin = origin # The original game label to check for "seen" status
             
-            # Check if the player has seen the original label in the game
-            # Split by label but keep the label name
-            self.is_unlocked = False
-            if persistent.yukare_lock_enabled:
-                if self.origin and renpy.seen_label(self.origin):
-                    self.is_unlocked = True
-                elif renpy.seen_label(self.label):
-                    self.is_unlocked = True
-            else:
-                self.is_unlocked = True
-                
+            # Pre-resolve the display thumbnail path at initialization time
+            img_to_validate = scene_image if scene_image else image
+            self.display_thumb = yukare_validate_thumbnail(img_to_validate)
+            
             self.tag_list = [t.strip() for t in tags.split(",")] if tags else []
+
+        @property
+        def is_unlocked(self):
+            if not persistent.yukare_lock_enabled:
+                return True
+            if self.origin and renpy.seen_label(self.origin):
+                return True
+            if renpy.seen_label(self.label):
+                return True
+            return False
 
     if "yukare_replay_controls" not in config.overlay_screens:
         config.overlay_screens.append("yukare_replay_controls")
@@ -94,6 +106,7 @@ init -100 python:
     yukare_character_images = {}
     yukare_character_descriptions = {}
     yukare_all_tags = set()
+    yukare_image_cache = {}
 
     def get_yukare_scope():
         rv = {"pc_name": persistent.yukare_pc_name}
@@ -214,11 +227,17 @@ init -100 python:
         # Build image map and descriptions
         for c in yukare_characters:
             # Search for character image in Yukare_Replay/images/
-            img_path = "Yukare_Replay/images/{}.webp".format(c)
-            if not is_loadable(img_path):
-                img_path = "Yukare_Replay/images/{}.png".format(c)
-            if not is_loadable(img_path):
-                img_path = "Yukare_Replay/scripts/NoImageSet.png" # Fallback
+            if c in yukare_image_cache:
+                img_path = yukare_image_cache[c]
+            else:
+                img_path = "Yukare_Replay/images/{}.webp".format(c)
+                if not is_loadable(img_path):
+                    img_path = "Yukare_Replay/images/{}.png".format(c)
+                if not is_loadable(img_path):
+                    img_path = "Yukare_Replay/images/{}.jpg".format(c)
+                if not is_loadable(img_path):
+                    img_path = "Yukare_Replay/scripts/NoImageSet.png" # Fallback
+                yukare_image_cache[c] = img_path
             
             if c not in yukare_character_images:
                 yukare_character_images[c] = img_path
@@ -231,11 +250,17 @@ init -100 python:
             yukare_characters.insert(0, "All")
             yukare_scenes["All"] = all_scenes_list
             
-            all_img = "Yukare_Replay/images/All.webp"
-            if not is_loadable(all_img):
-                all_img = "Yukare_Replay/images/All.png"
-            if not is_loadable(all_img):
-                all_img = Transform(Solid("#34495e"), xsize=1280, ysize=720)
+            if "All" in yukare_image_cache:
+                all_img = yukare_image_cache["All"]
+            else:
+                all_img = "Yukare_Replay/images/All.webp"
+                if not is_loadable(all_img):
+                    all_img = "Yukare_Replay/images/All.png"
+                if not is_loadable(all_img):
+                    all_img = "Yukare_Replay/images/All.jpg"
+                if not is_loadable(all_img):
+                    all_img = Transform(Solid("#34495e"), xsize=1280, ysize=720)
+                yukare_image_cache["All"] = all_img
             
             yukare_character_images["All"] = all_img
             yukare_character_descriptions["All"] = "All available scenes"
@@ -245,11 +270,17 @@ init -100 python:
             yukare_scenes["Favorites"] = []
             
             # Check for custom "Favorites" image
-            fav_img = "Yukare_Replay/images/Favorites.webp"
-            if not is_loadable(fav_img):
-                fav_img = "Yukare_Replay/images/Favorites.png"
-            if not is_loadable(fav_img):
-                fav_img = Transform(Solid("#9b59b6"), xsize=1280, ysize=720)
+            if "Favorites" in yukare_image_cache:
+                fav_img = yukare_image_cache["Favorites"]
+            else:
+                fav_img = "Yukare_Replay/images/Favorites.webp"
+                if not is_loadable(fav_img):
+                    fav_img = "Yukare_Replay/images/Favorites.png"
+                if not is_loadable(fav_img):
+                    fav_img = "Yukare_Replay/images/Favorites.jpg"
+                if not is_loadable(fav_img):
+                    fav_img = Transform(Solid("#9b59b6"), xsize=1280, ysize=720)
+                yukare_image_cache["Favorites"] = fav_img
                 
             yukare_character_images["Favorites"] = fav_img
             yukare_character_descriptions["Favorites"] = "Your favorite scenes"
@@ -262,6 +293,7 @@ init 20 python:
     parse_yukare_scenes()
 
     def reload_yukare_data():
+        yukare_image_cache.clear()
         parse_yukare_scenes()
         renpy.notify("Gallery Reloaded!")
         renpy.restart_interaction()
