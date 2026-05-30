@@ -6,7 +6,7 @@ Este repositório contém a lógica modular do sistema **Yukare Replay**. Estes 
 
 ## 1. Galeria de Replays (`yukare_replay_init.rpy` e `yukare_replay_screen.rpy`)
 
-O sistema escaneia automaticamente o diretório `game/Yukare_Replay/` em busca de labels que comecem com `replay_`.
+O sistema escaneia automaticamente o diretório `game/Yukare_Replay/` em busca de labels que comecem com `replay_`. Se precisar de uma label pode colocar ela junto com as outras, Apenas aquelas começando com replay_ farão parte da galeria.
 
 ### Como registrar uma cena:
 Adicione metadados em comentários logo após a definição da label:
@@ -23,7 +23,7 @@ label replay_exemplo_cena:
     return
 ```
 
-### Ordem de Prioridade para Miniaturas:
+### Ordem de Prioridade para Miniaturas da cena:
 1. Marcador `##@scene_image`.
 2. Primeira instrução `scene` encontrada no bloco da label.
 3. Imagem padrão configurada em `yukare_replay_init.rpy`.
