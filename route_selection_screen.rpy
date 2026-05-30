@@ -17,7 +17,7 @@ init python:
                 return path
                 
         # Fallback to standard NoImageSet
-        fallback_path = "Yukare_Replay/scripts/NoImageSet.png"
+        fallback_path = "Yukare_Replay/scripts/images/NoImageSet.png"
         if renpy.loadable(fallback_path):
             return fallback_path
         return None

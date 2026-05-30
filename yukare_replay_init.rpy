@@ -16,7 +16,7 @@ init -100 python:
 
     def yukare_validate_thumbnail(img):
         if not img:
-            return "Yukare_Replay/scripts/NoImageSet.png"
+            return "Yukare_Replay/scripts/images/NoImageSet.png"
         
         try:
             is_str = isinstance(img, basestring)
@@ -54,6 +54,17 @@ init -100 python:
         except:
             pass
 
+        # Try finding dynamically in game files (handles subfolders inside images/)
+        try:
+            for f in renpy.list_files():
+                if f.startswith("images/") or f.startswith("Yukare_Replay/images/"):
+                    base = os.path.basename(f)
+                    name_without_ext, _ = os.path.splitext(base)
+                    if name_without_ext.lower() == img.lower():
+                        return f
+        except:
+            pass
+
         # Try common subfolders / extensions just in case
         try:
             for folder in ["images/", "Yukare_Replay/images/"]:
@@ -70,7 +81,7 @@ init -100 python:
         except:
             pass
 
-        return "Yukare_Replay/scripts/NoImageSet.png"
+        return "Yukare_Replay/scripts/images/NoImageSet.png"
 
     class YukareScene(object):
         def __init__(self, label, character, title, tags, image=None, scene_image=None, origin=None):
@@ -236,7 +247,7 @@ init -100 python:
                 if not is_loadable(img_path):
                     img_path = "Yukare_Replay/images/{}.jpg".format(c)
                 if not is_loadable(img_path):
-                    img_path = "Yukare_Replay/scripts/NoImageSet.png" # Fallback
+                    img_path = "Yukare_Replay/scripts/images/NoImageSet.png" # Fallback
                 yukare_image_cache[c] = img_path
             
             if c not in yukare_character_images:

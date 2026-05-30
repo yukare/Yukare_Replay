@@ -164,7 +164,7 @@ screen Yukare_Replay_Character_Select():
             xfill True
 
             for c in yukare_characters:
-                $ char_thumb = yukare_character_images.get(c, "Yukare_Replay/scripts/NoImageSet.png")
+                $ char_thumb = yukare_character_images.get(c, "Yukare_Replay/scripts/images/NoImageSet.png")
                 vbox:
                     spacing 15
                     imagebutton:
