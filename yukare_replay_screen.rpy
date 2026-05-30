@@ -151,7 +151,7 @@ screen Yukare_Replay_Character_Select():
     viewport:
         align (0.5, 0.5)
         xsize 1200
-        ysize 500
+        ysize 800
         scrollbars "vertical"
         mousewheel True
         draggable True
@@ -360,7 +360,7 @@ screen Yukare_Replay_Scene_Select(char_name):
         viewport:
             xalign 0.5
             xsize 1200
-            ysize 400
+            ysize 800
             scrollbars "vertical"
             mousewheel True
             draggable True
