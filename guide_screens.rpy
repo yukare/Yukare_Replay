@@ -17,7 +17,7 @@ screen yukare_guide_selection():
     frame:
         align (0.5, 0.5)
         xysize (1240, 680)
-        background Frame("Yukare_Guide/images/frame.png", Borders(4, 4, 4, 4))
+        background Frame("Yukare_Replay/scripts/images/frame.png", Borders(4, 4, 4, 4))
         padding (20, 20, 20, 20)
 
         vbox:
@@ -38,7 +38,7 @@ screen yukare_guide_selection():
                 # Painel Esquerdo: Lista de Personagens
                 frame:
                     xysize (350, 580)
-                    background Frame("Yukare_Guide/images/frame.png", Borders(4, 4, 4, 4))
+                    background Frame("Yukare_Replay/scripts/images/frame.png", Borders(4, 4, 4, 4))
                     padding (15, 15)
 
                     vbox:
@@ -62,7 +62,7 @@ screen yukare_guide_selection():
                                         action SetVariable("yukare_selected_char", char_key)
                                         xfill True
                                         ysize 50
-                                        background (Frame("Yukare_Guide/images/hover_background.png", Borders(4, 4, 4, 4)) if (yukare_selected_char == char_key) else None)
+                                        background (Frame("Yukare_Replay/scripts/images/hover_background.png", Borders(4, 4, 4, 4)) if (yukare_selected_char == char_key) else None)
                                         text_color ("#38bdf8" if (yukare_selected_char == char_key) else "#ffffff")
                                         text_hover_color "#38bdf8"
                                         text_size 18
@@ -71,7 +71,7 @@ screen yukare_guide_selection():
                 # Painel Direito: Lista de Passos do Personagem Selecionado
                 frame:
                     xysize (810, 580)
-                    background Frame("Yukare_Guide/images/frame.png", Borders(4, 4, 4, 4))
+                    background Frame("Yukare_Replay/scripts/images/frame.png", Borders(4, 4, 4, 4))
                     padding (20, 20)
 
                     vbox:
@@ -101,7 +101,7 @@ screen yukare_guide_selection():
                                             $ label_name = "{}_{}".format(selected_data["label_prefix"], step_num)
                                             $ done_val = str(step_data.get("done", "false")).lower()
                                             $ border_color = "#a855f7" if done_val == "info" else ("#22c55e" if done_val in ("true", "1") else "#3b82f6")
-                                            $ step_bg = Frame(im.MatrixColor("Yukare_Guide/images/frame.png", im.matrix.saturation(0.0) * im.matrix.colorize("#000000", border_color)), Borders(4, 4, 4, 4))
+                                            $ step_bg = Frame(im.MatrixColor("Yukare_Replay/scripts/images/frame.png", im.matrix.saturation(0.0) * im.matrix.colorize("#000000", border_color)), Borders(4, 4, 4, 4))
 
 
                                             button:
@@ -122,7 +122,7 @@ screen yukare_guide_selection():
                                                     # Círculo com o número do passo
                                                     frame:
                                                         xysize (40, 40)
-                                                        background Frame("Yukare_Guide/images/bubble.png", Borders(4, 4, 4, 4))
+                                                        background Frame("Yukare_Replay/scripts/images/bubble.png", Borders(4, 4, 4, 4))
                                                         yalign 0.5
                                                         text step_num align (0.5, 0.5) color "#000" size 18 bold True
 
@@ -180,7 +180,7 @@ screen yukare_guide_detail(person, step, description, requirements):
     frame:
         align (0.5, 0.5)
         xysize (800, 560)
-        background Frame("Yukare_Guide/images/frame.png", Borders(4, 4, 4, 4))
+        background Frame("Yukare_Replay/scripts/images/frame.png", Borders(4, 4, 4, 4))
         padding (40, 30, 40, 30)
 
         vbox:
@@ -230,7 +230,7 @@ screen yukare_guide_detail(person, step, description, requirements):
             textbutton "GOT IT":
                 action Return()
                 align (0.5, 1.0)
-                background Frame("Yukare_Guide/images/hover_background.png", Borders(4, 4, 4, 4))
+                background Frame("Yukare_Replay/scripts/images/hover_background.png", Borders(4, 4, 4, 4))
                 padding (40, 10)
                 text_color "#ffffff"
                 text_hover_color "#38bdf8"
@@ -250,7 +250,7 @@ screen yukare_status_screen():
     frame:
         align (0.5, 0.5)
         xysize (950, 620)
-        background Frame("Yukare_Guide/images/frame.png", Borders(4, 4, 4, 4))
+        background Frame("Yukare_Replay/scripts/images/frame.png", Borders(4, 4, 4, 4))
         padding (25, 25, 25, 25)
 
         vbox:
