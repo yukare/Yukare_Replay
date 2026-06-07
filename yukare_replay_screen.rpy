@@ -61,8 +61,8 @@ screen yukare_replay_controls():
             # Botão Ocultar Interface
             button:
                 xsize 60 ysize 35
-                idle_background Transform(Solid("#000a"), xsize=60, ysize=35)
-                hover_background Transform(Solid("#FF86C2cc"), xsize=60, ysize=35)
+                idle_background Solid("#000a")
+                hover_background Solid("#FF86C2cc")
                 action HideInterface()
                 hovered SetScreenVariable("my_tooltip", "HIDE UI")
                 unhovered SetScreenVariable("my_tooltip", "")
@@ -72,8 +72,8 @@ screen yukare_replay_controls():
             # Botão Skip (Próxima Imagem)
             button:
                 xsize 60 ysize 35
-                idle_background Transform(Solid("#000a"), xsize=60, ysize=35)
-                hover_background Transform(Solid("#FF86C2cc"), xsize=60, ysize=35)
+                idle_background Solid("#000a")
+                hover_background Solid("#FF86C2cc")
                 action Skip() alternate Skip(fast=True)
                 hovered SetScreenVariable("my_tooltip", "FAST FORWARD")
                 unhovered SetScreenVariable("my_tooltip", "")
@@ -84,8 +84,8 @@ screen yukare_replay_controls():
             $ is_loop = getattr(store, "yukare_replay_loop", False)
             button:
                 xsize 60 ysize 35
-                idle_background Transform(Solid("#000a"), xsize=60, ysize=35)
-                hover_background Transform(Solid("#FF86C2cc"), xsize=60, ysize=35)
+                idle_background Solid("#000a")
+                hover_background Solid("#FF86C2cc")
                 action ToggleVariable("yukare_replay_loop")
                 hovered SetScreenVariable("my_tooltip", "TOGGLE LOOP")
                 unhovered SetScreenVariable("my_tooltip", "")
@@ -94,9 +94,9 @@ screen yukare_replay_controls():
 
             # Botão Sair do Replay
             button:
-                xsize 32 ysize 35
-                idle_background Transform(Solid("#f44336aa"), xsize=40, ysize=35)
-                hover_background Transform(Solid("#f44336"), xsize=40, ysize=35)
+                xsize 40 ysize 35
+                idle_background Solid("#f44336aa")
+                hover_background Solid("#f44336")
                 if persistent.yukare_random_mode_active:
                     action Confirm(_("End the replay?"), Function(stop_yukare_random_mode))
                 else:
@@ -168,8 +168,8 @@ screen Yukare_Replay_Character_Select():
                 vbox:
                     spacing 15
                     imagebutton:
-                        idle Transform(char_thumb, xsize=300, ysize=170, fit="cover")
-                        hover Transform(char_thumb, xsize=300, ysize=170, fit="cover", matrixcolor=BrightnessMatrix(0.2) * ContrastMatrix(1.2))
+                        idle yukare_thumb(char_thumb, 300, 170)
+                        hover yukare_thumb(char_thumb, 300, 170, effect="hover")
                         action ShowMenu("Yukare_Replay_Scene_Select", char_name=c)
                         hovered SetScreenVariable("hovered_char", c)
                         unhovered SetScreenVariable("hovered_char", None)
@@ -382,11 +382,11 @@ screen Yukare_Replay_Scene_Select(char_name):
                             ysize 200
                             imagebutton:
                                 if is_unlocked:
-                                    idle Transform(display_thumb, xsize=300, ysize=170, fit="cover")
-                                    hover Transform(display_thumb, xsize=300, ysize=170, fit="cover", matrixcolor=BrightnessMatrix(0.25) * ContrastMatrix(1.25))
+                                    idle yukare_thumb(display_thumb, 300, 170)
+                                    hover yukare_thumb(display_thumb, 300, 170, effect="hover_scene")
                                     action Replay(s.label, scope=get_yukare_scope(), locked=False)
                                 else:
-                                    idle Transform(display_thumb, xsize=300, ysize=170, fit="cover", matrixcolor=SaturationMatrix(0.0)*BrightnessMatrix(-0.5))
+                                    idle yukare_thumb(display_thumb, 300, 170, effect="locked")
                                     action Notify("This scene is locked. Play the game to unlock it!")
                                 align (0.5, 0.5)
 

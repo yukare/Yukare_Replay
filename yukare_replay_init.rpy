@@ -12,6 +12,42 @@ init -100 python:
     import os
     import io
 
+    # Detect legacy Ren'Py versions (Ren'Py 6.99 etc.)
+    YUKARE_LEGACY_RENPY = renpy.version_tuple < (7, 4, 0)
+
+    def yukare_thumb(img, w, h, effect=None):
+        if YUKARE_LEGACY_RENPY:
+            if isinstance(img, Solid):
+                color = getattr(img, "color", "#34495e")
+                return Solid(color, xsize=w, ysize=h)
+            
+            try:
+                is_str = isinstance(img, basestring)
+            except NameError:
+                is_str = isinstance(img, str)
+
+            if is_str:
+                scaled = im.Scale(img, w, h)
+                if effect == "hover":
+                    return im.MatrixColor(scaled, im.matrix.brightness(0.2) * im.matrix.contrast(1.2))
+                elif effect == "hover_scene":
+                    return im.MatrixColor(scaled, im.matrix.brightness(0.25) * im.matrix.contrast(1.25))
+                elif effect == "locked":
+                    return im.MatrixColor(scaled, im.matrix.saturation(0.0) * im.matrix.brightness(-0.5))
+                else:
+                    return scaled
+            else:
+                return img
+        else:
+            if effect == "hover":
+                return Transform(img, xsize=w, ysize=h, fit="cover", matrixcolor=BrightnessMatrix(0.2) * ContrastMatrix(1.2))
+            elif effect == "hover_scene":
+                return Transform(img, xsize=w, ysize=h, fit="cover", matrixcolor=BrightnessMatrix(0.25) * ContrastMatrix(1.25))
+            elif effect == "locked":
+                return Transform(img, xsize=w, ysize=h, fit="cover", matrixcolor=SaturationMatrix(0.0) * BrightnessMatrix(-0.5))
+            else:
+                return Transform(img, xsize=w, ysize=h, fit="cover")
+
     yukare_thumbnail_cache = {}
 
     def yukare_validate_thumbnail(img):
@@ -270,7 +306,7 @@ init -100 python:
                 if not is_loadable(all_img):
                     all_img = "Yukare_Replay/images/All.jpg"
                 if not is_loadable(all_img):
-                    all_img = Transform(Solid("#34495e"), xsize=1280, ysize=720)
+                    all_img = Solid("#34495e", xsize=1280, ysize=720)
                 yukare_image_cache["All"] = all_img
             
             yukare_character_images["All"] = all_img
@@ -290,7 +326,7 @@ init -100 python:
                 if not is_loadable(fav_img):
                     fav_img = "Yukare_Replay/images/Favorites.jpg"
                 if not is_loadable(fav_img):
-                    fav_img = Transform(Solid("#9b59b6"), xsize=1280, ysize=720)
+                    fav_img = Solid("#9b59b6", xsize=1280, ysize=720)
                 yukare_image_cache["Favorites"] = fav_img
                 
             yukare_character_images["Favorites"] = fav_img
