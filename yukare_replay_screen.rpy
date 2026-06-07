@@ -46,6 +46,12 @@ style yukare_gallery_label:
     size 22
     outlines [(1, "#000", 0, 0)]
 
+style yukare_gallery_viewport:
+    bottom_margin 100
+
+style yukare_scene_viewport:
+    bottom_margin 50
+
 # Tela que exibe o botão apenas durante um replay
 screen yukare_replay_controls():
     zorder 100
@@ -149,13 +155,13 @@ screen Yukare_Replay_Character_Select():
             text_color ("#0f0" if persistent.yukare_lock_enabled else "#f00")
 
     viewport:
+        style "yukare_gallery_viewport"
         align (0.5, 0.5)
         xsize 1200
         ysize 800
         scrollbars "vertical"
         mousewheel True
         draggable True
-        bottom_margin 100
 
         vpgrid:
             cols 3
@@ -358,13 +364,13 @@ screen Yukare_Replay_Scene_Select(char_name):
 
         # Viewport
         viewport:
+            style "yukare_scene_viewport"
             xalign 0.5
             xsize 1200
             ysize 800
             scrollbars "vertical"
             mousewheel True
             draggable True
-            bottom_margin 50
 
             vpgrid:
                 cols 3
