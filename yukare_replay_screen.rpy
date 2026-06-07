@@ -155,18 +155,18 @@ screen Yukare_Replay_Character_Select():
         scrollbars "vertical"
         mousewheel True
         draggable True
+        bottom_margin 100
 
         vpgrid:
             cols 3
-            xspacing 30
-            yspacing 60
-            bottom_margin 100
+            spacing 30
             xfill True
 
             for c in yukare_characters:
                 $ char_thumb = yukare_character_images.get(c, "Yukare_Replay/scripts/images/NoImageSet.png")
                 vbox:
                     spacing 15
+                    bottom_margin 30
                     imagebutton:
                         idle yukare_thumb(char_thumb, 300, 170)
                         hover yukare_thumb(char_thumb, 300, 170, effect="hover")
@@ -364,11 +364,11 @@ screen Yukare_Replay_Scene_Select(char_name):
             scrollbars "vertical"
             mousewheel True
             draggable True
+            bottom_margin 50
 
             vpgrid:
                 cols 3
                 spacing 30
-                bottom_margin 50
                 xfill True
 
                 for s in current_scenes:
