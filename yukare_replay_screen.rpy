@@ -172,7 +172,6 @@ screen Yukare_Replay_Character_Select():
                 $ char_thumb = yukare_character_images.get(c, "Yukare_Replay/scripts/images/NoImageSet.png")
                 vbox:
                     spacing 15
-                    bottom_margin 30
                     imagebutton:
                         idle yukare_thumb(char_thumb, 300, 170)
                         hover yukare_thumb(char_thumb, 300, 170, effect="hover")
@@ -216,6 +215,8 @@ screen Yukare_Replay_Character_Select():
                                 text_align 0.5
                                 xsize 380
                                 layout "subtitle"
+
+                    null height 30
 
     # Painel de descrição completa (aparece ao passar o mouse)
     if hovered_char:
